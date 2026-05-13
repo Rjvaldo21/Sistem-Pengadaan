@@ -513,6 +513,16 @@ textarea:focus {
   border: 1px solid #dbeafe;
 }
 
+.total-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.total-grid .total-box {
+  margin: 15px 0;
+}
+
 .total-box span {
   color: var(--muted);
   font-size: 13px;
@@ -694,7 +704,7 @@ textarea:focus {
   }
 
   table {
-    min-width: 760px;
+    min-width: 980px;
   }
 
   .table-wrap {
@@ -739,6 +749,10 @@ textarea:focus {
 
   .action-buttons {
     flex-direction: column-reverse;
+  }
+
+  .total-grid {
+    grid-template-columns: 1fr;
   }
 
   .share-actions {

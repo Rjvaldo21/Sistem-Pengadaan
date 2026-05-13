@@ -21,6 +21,12 @@ if (isLoginPage && currentUser) {
 
 const loanDateInput = document.getElementById('loanDate');
 if (loanDateInput) loanDateInput.value = today;
+const appraisalDateInput = document.getElementById('appraisalDate');
+if (appraisalDateInput) appraisalDateInput.value = today;
+const createdByInput = document.getElementById('createdBy');
+if (createdByInput) createdByInput.value = currentUser || '';
+const appraiserInput = document.getElementById('appraiser');
+if (appraiserInput) appraiserInput.value = currentUser || '';
 syncDueDate();
 loadSettings();
 populateLoanPackageSelect();
@@ -59,7 +65,14 @@ function logout(event) {
 }
 
 function openModal() {
-  document.getElementById('modalOverlay')?.classList.add('show');
+  const loanForm = document.getElementById('loanForm');
+  if (loanForm) {
+    loanForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('clientName')?.focus();
+    return;
+  }
+
+  window.location.href = 'index.html#loanForm';
 }
 
 function closeModal() {
@@ -82,9 +95,12 @@ function calculateLoan() {
   const amount = Number(document.getElementById('loanAmount')?.value) || 0;
   const margin = Number(document.getElementById('margin')?.value) || 0;
   const duration = Number(document.getElementById('duration')?.value) || 3;
-  const monthly = duration > 0 ? (amount * (1 + margin / 100)) / duration : 0;
+  const total = amount * (1 + margin / 100);
+  const monthly = duration > 0 ? total / duration : 0;
   const monthlyPayment = document.getElementById('monthlyPayment');
+  const totalPayable = document.getElementById('totalPayable');
   if (monthlyPayment) monthlyPayment.textContent = `$${monthly.toFixed(2)}`;
+  if (totalPayable) totalPayable.textContent = `$${total.toFixed(2)}`;
   syncDueDate();
   return monthly;
 }
@@ -161,6 +177,10 @@ function applyLoanPackage() {
 
   if (monthlyPayment && selectedPackage.monthly) {
     monthlyPayment.textContent = `$${parseMoney(selectedPackage.monthly).toFixed(2)}`;
+    const totalPayable = document.getElementById('totalPayable');
+    const amount = parseMoney(selectedPackage.amount);
+    const packageMargin = parsePercent(selectedPackage.margin);
+    if (totalPayable) totalPayable.textContent = `$${(amount * (1 + packageMargin / 100)).toFixed(2)}`;
   } else {
     calculateLoan();
   }
@@ -175,19 +195,31 @@ const defaultLoans = [
     contact: '7721 4401',
     address: 'Bairo Pite',
     idNumber: 'BI-00123',
+    identityType: 'BI',
+    birthDate: '',
+    gender: 'Pria',
     jobStatus: 'Karyawan',
+    emergencyContact: '-',
     packageName: 'Paket 1',
     collateralType: 'Motor',
     collateralName: 'Honda Beat 2022',
     appraisalValue: 900,
     condition: 'Baik',
     documentNumber: 'STNK-7788',
+    storageLocation: 'Brankas Utama',
+    appraiser: 'Staff',
+    appraisalDate: '2026-05-13',
+    collateralPhoto: '',
     loanDate: '2026-05-13',
     amount: 500,
     margin: 15,
     duration: 3,
     dueDate: '2026-08-13',
     monthlyPayment: 200,
+    disbursementMethod: 'Tunai',
+    disbursementStatus: 'Dicairkan',
+    penaltyRate: 0,
+    createdBy: 'Staff',
     note: '',
     status: 'Aktif'
   },
@@ -197,19 +229,31 @@ const defaultLoans = [
     contact: '7721 4402',
     address: 'Dom Aleixo',
     idNumber: 'BI-00124',
+    identityType: 'BI',
+    birthDate: '',
+    gender: 'Wanita',
     jobStatus: 'Wirausaha',
+    emergencyContact: '-',
     packageName: 'Paket 2',
     collateralType: 'Emas',
     collateralName: 'Emas 20 gram',
     appraisalValue: 1250,
     condition: 'Baik',
     documentNumber: '-',
+    storageLocation: 'Brankas Utama',
+    appraiser: 'Staff',
+    appraisalDate: '2026-05-12',
+    collateralPhoto: '',
     loanDate: '2026-05-12',
     amount: 1000,
     margin: 14,
     duration: 3,
     dueDate: '2026-08-12',
     monthlyPayment: 350,
+    disbursementMethod: 'Tunai',
+    disbursementStatus: 'Dicairkan',
+    penaltyRate: 0,
+    createdBy: 'Staff',
     note: '',
     status: 'Lunas'
   },
@@ -219,19 +263,31 @@ const defaultLoans = [
     contact: '7721 4403',
     address: 'Comoro',
     idNumber: 'BI-00125',
+    identityType: 'BI',
+    birthDate: '',
+    gender: 'Pria',
     jobStatus: 'Wirausaha',
+    emergencyContact: '-',
     packageName: 'Paket 4',
     collateralType: 'Mobil',
     collateralName: 'Toyota Hilux',
     appraisalValue: 4500,
     condition: 'Baik',
     documentNumber: 'BPKB-4501',
+    storageLocation: 'Gudang Aset',
+    appraiser: 'Staff',
+    appraisalDate: '2026-05-11',
+    collateralPhoto: '',
     loanDate: '2026-05-11',
     amount: 2000,
     margin: 12.5,
     duration: 3,
     dueDate: '2026-08-11',
     monthlyPayment: 750,
+    disbursementMethod: 'Tunai',
+    disbursementStatus: 'Dicairkan',
+    penaltyRate: 0,
+    createdBy: 'Staff',
     note: '',
     status: 'Terlambat'
   },
@@ -241,19 +297,31 @@ const defaultLoans = [
     contact: '7721 4404',
     address: 'Bidau',
     idNumber: 'BI-00126',
+    identityType: 'BI',
+    birthDate: '',
+    gender: 'Wanita',
     jobStatus: 'Karyawan',
+    emergencyContact: '-',
     packageName: '',
     collateralType: 'Laptop',
     collateralName: 'Asus VivoBook',
     appraisalValue: 500,
     condition: 'Baik',
     documentNumber: '-',
+    storageLocation: 'Brankas Utama',
+    appraiser: 'Staff',
+    appraisalDate: '2026-05-10',
+    collateralPhoto: '',
     loanDate: '2026-05-10',
     amount: 300,
     margin: 15,
     duration: 3,
     dueDate: '2026-08-10',
     monthlyPayment: 115,
+    disbursementMethod: 'Tunai',
+    disbursementStatus: 'Proses',
+    penaltyRate: 0,
+    createdBy: 'Staff',
     note: '',
     status: 'Proses'
   }
@@ -278,16 +346,28 @@ const defaultPayments = [
     code: 'BY-001',
     loanCode: 'PN-2026-001',
     client: 'Jo\u00e3o Pereira',
+    installmentNo: '1',
+    paymentType: 'Cicilan',
+    method: 'Tunai',
     paymentDate: '2026-06-13',
     amount: 200,
+    penalty: 0,
+    remainingBalance: 375,
+    createdBy: 'Staff',
     status: 'Diterima'
   },
   {
     code: 'BY-002',
     loanCode: 'PN-2026-002',
     client: 'Maria Soares',
+    installmentNo: '1',
+    paymentType: 'Cicilan',
+    method: 'Tunai',
     paymentDate: '2026-06-12',
     amount: 350,
+    penalty: 0,
+    remainingBalance: 790,
+    createdBy: 'Staff',
     status: 'Diterima'
   }
 ];
@@ -307,16 +387,24 @@ const defaultCashIn = [
   {
     code: 'KM-001',
     source: 'Cicilan',
+    category: 'Cicilan',
+    method: 'Tunai',
     description: 'PN-2026-001 Jo\u00e3o Pereira',
     cashDate: '2026-06-13',
-    amount: 200
+    amount: 200,
+    createdBy: 'Staff',
+    attachment: ''
   },
   {
     code: 'KM-002',
     source: 'Pelunasan',
+    category: 'Pelunasan',
+    method: 'Tunai',
     description: 'PN-2026-002 Maria Soares',
     cashDate: '2026-06-12',
-    amount: 350
+    amount: 350,
+    createdBy: 'Staff',
+    attachment: ''
   }
 ];
 
@@ -382,6 +470,32 @@ function money(value) {
   })}`;
 }
 
+function getTotalPayable(loan) {
+  const amount = Number(loan.amount || 0);
+  const margin = Number(loan.margin || 0);
+  const penalty = Number(loan.penaltyAmount || 0);
+  return amount * (1 + margin / 100) + penalty;
+}
+
+function getPaymentsForLoan(loanCode) {
+  return getRecords(storageKeys.payments, defaultPayments).filter(payment => payment.loanCode === loanCode);
+}
+
+function getPaidAmount(loanCode) {
+  return getPaymentsForLoan(loanCode).reduce((sum, payment) => {
+    return sum + Number(payment.amount || 0) + Number(payment.penalty || 0);
+  }, 0);
+}
+
+function getRemainingBalance(loan) {
+  if (loan.status === 'Lunas') return 0;
+  return Math.max(getTotalPayable(loan) - getPaidAmount(loan.code), 0);
+}
+
+function getCurrentStaff() {
+  return localStorage.getItem('currentUser') || 'Staff';
+}
+
 function statusBadge(status) {
   const normalized = String(status || '').toLowerCase();
   let className = 'badge-info';
@@ -408,6 +522,7 @@ function renderTemporaryDatabase() {
   renderAuctionPage();
   renderCashInPage();
   renderCashOutPage(loans);
+  renderReportPage(loans);
   renderContractPage(loans);
   renderUserPage();
 }
@@ -420,6 +535,7 @@ function renderDashboardLoans(loans) {
       <td>${escapeHTML(loan.collateralType)}</td>
       <td>${formatDate(loan.loanDate)}</td>
       <td>${money(loan.amount)}</td>
+      <td>${money(getRemainingBalance(loan))}</td>
       <td>${formatDate(loan.dueDate)}</td>
       <td>${statusBadge(loan.status)}</td>
       <td><button class="btn btn-light" onclick="viewDetail('${escapeHTML(loan.code)}')">Detail</button></td>
@@ -434,9 +550,11 @@ function renderLoanPage(loans) {
       <td>${escapeHTML(loan.code)}</td>
       <td>${escapeHTML(loan.client)}</td>
       <td>${money(loan.amount)}</td>
-      <td>${Number(loan.margin || 0)}%</td>
-      <td>${Number(loan.duration || 0)} bulan</td>
       <td>${money(loan.monthlyPayment)}</td>
+      <td>${money(getTotalPayable(loan))}</td>
+      <td>${money(getRemainingBalance(loan))}</td>
+      <td>${formatDate(loan.dueDate)}</td>
+      <td>${escapeHTML(loan.disbursementMethod || 'Tunai')}</td>
       <td>${statusBadge(loan.status)}</td>
     </tr>
   `));
@@ -449,6 +567,9 @@ function renderClientPage(loans) {
     contact: loan.contact,
     address: loan.address,
     idNumber: loan.idNumber,
+    identityType: loan.identityType,
+    jobStatus: loan.jobStatus,
+    emergencyContact: loan.emergencyContact,
     status: loan.status
   }));
   const clients = [...loanClients, ...getRecords(storageKeys.clients)];
@@ -458,8 +579,9 @@ function renderClientPage(loans) {
     <tr>
       <td>${escapeHTML(client.name)}</td>
       <td>${escapeHTML(client.contact || '-')}</td>
-      <td>${escapeHTML(client.address || '-')}</td>
-      <td>${escapeHTML(client.idNumber || '-')}</td>
+      <td>${escapeHTML(client.identityType || 'BI')} - ${escapeHTML(client.idNumber || '-')}</td>
+      <td>${escapeHTML(client.jobStatus || '-')}</td>
+      <td>${escapeHTML(client.emergencyContact || '-')}</td>
       <td>${statusBadge(client.status || 'Aktif')}</td>
     </tr>
   `));
@@ -473,6 +595,9 @@ function renderCollateralPage(loans) {
     appraisalValue: loan.appraisalValue,
     condition: loan.condition,
     documentNumber: loan.documentNumber,
+    storageLocation: loan.storageLocation,
+    appraiser: loan.appraiser,
+    appraisalDate: loan.appraisalDate,
     status: loan.status === 'Lunas' ? 'Ditebus' : loan.status === 'Terlambat' ? 'Proses Lelang' : 'Disimpan'
   }));
   const collaterals = [...loanCollaterals, ...getRecords(storageKeys.collaterals)];
@@ -482,8 +607,9 @@ function renderCollateralPage(loans) {
       <td>${escapeHTML(item.type)}</td>
       <td>${escapeHTML(item.name || '-')}</td>
       <td>${money(item.appraisalValue)}</td>
-      <td>${escapeHTML(item.condition || '-')}</td>
-      <td>${escapeHTML(item.documentNumber || '-')}</td>
+      <td>${escapeHTML(item.storageLocation || 'Brankas Utama')}</td>
+      <td>${escapeHTML(item.appraiser || '-')}</td>
+      <td>${formatDate(item.appraisalDate)}</td>
       <td>${statusBadge(item.status || 'Disimpan')}</td>
     </tr>
   `));
@@ -498,8 +624,13 @@ function renderPaymentPage() {
       <td>${escapeHTML(payment.code)}</td>
       <td>${escapeHTML(payment.loanCode)}</td>
       <td>${escapeHTML(payment.client)}</td>
+      <td>${escapeHTML(payment.installmentNo || '-')}</td>
+      <td>${escapeHTML(payment.paymentType || 'Cicilan')}</td>
+      <td>${escapeHTML(payment.method || 'Tunai')}</td>
       <td>${formatDate(payment.paymentDate)}</td>
       <td>${money(payment.amount)}</td>
+      <td>${money(payment.penalty)}</td>
+      <td>${money(payment.remainingBalance)}</td>
       <td>${statusBadge(payment.status || 'Diterima')}</td>
     </tr>
   `));
@@ -517,7 +648,7 @@ function renderDueDatePage(loans) {
         <td>${escapeHTML(loan.code)}</td>
         <td>${escapeHTML(loan.client)}</td>
         <td>${formatDate(loan.dueDate)}</td>
-        <td>${money(loan.monthlyPayment)}</td>
+        <td>${money(getRemainingBalance(loan))}</td>
         <td>${remainingDays}</td>
         <td>${statusBadge(status)}</td>
       </tr>
@@ -533,6 +664,9 @@ function renderCashOutPage(loans) {
     purpose: `Pencairan pinjaman ${loan.code}`,
     cashDate: loan.loanDate,
     amount: loan.amount,
+    category: 'Pencairan Pinjaman',
+    method: loan.disbursementMethod || 'Tunai',
+    createdBy: getCurrentStaff(),
     status: 'Selesai'
   }));
   const cashOut = [...loanCashOut, ...getRecords(storageKeys.cashOut)];
@@ -540,10 +674,13 @@ function renderCashOutPage(loans) {
   renderRows('.data-table tbody', cashOut.map(item => `
     <tr>
       <td>${escapeHTML(item.code)}</td>
+      <td>${escapeHTML(item.category || 'Operasional')}</td>
       <td>${escapeHTML(item.recipient)}</td>
       <td>${escapeHTML(item.purpose)}</td>
+      <td>${escapeHTML(item.method || 'Tunai')}</td>
       <td>${formatDate(item.cashDate)}</td>
       <td>${money(item.amount)}</td>
+      <td>${escapeHTML(item.createdBy || '-')}</td>
       <td>${statusBadge(item.status || 'Tercatat')}</td>
     </tr>
   `));
@@ -557,6 +694,10 @@ function renderContractPage(loans) {
     client: loan.client,
     contractDate: loan.loanDate,
     duration: `${Number(loan.duration || 0)} bulan`,
+    amount: loan.amount,
+    collateral: `${loan.collateralType} - ${loan.collateralName}`,
+    dueDate: loan.dueDate,
+    witness: loan.witness || '-',
     status: loan.status === 'Proses' ? 'Draft' : 'Ditandatangani'
   }));
   const contracts = [...loanContracts, ...getRecords(storageKeys.contracts)];
@@ -566,8 +707,10 @@ function renderContractPage(loans) {
       <td>${escapeHTML(contract.contractNo)}</td>
       <td>${escapeHTML(contract.loanCode)}</td>
       <td>${escapeHTML(contract.client)}</td>
-      <td>${formatDate(contract.contractDate)}</td>
-      <td>${escapeHTML(contract.duration)}</td>
+      <td>${money(contract.amount)}</td>
+      <td>${escapeHTML(contract.collateral || '-')}</td>
+      <td>${formatDate(contract.dueDate || contract.contractDate)}</td>
+      <td>${escapeHTML(contract.witness || '-')}</td>
       <td>${statusBadge(contract.status || 'Draft')}</td>
     </tr>
   `));
@@ -596,10 +739,12 @@ function renderCashInPage() {
   renderRows('.data-table tbody', cashIn.map(item => `
     <tr>
       <td>${escapeHTML(item.code)}</td>
-      <td>${escapeHTML(item.source)}</td>
+      <td>${escapeHTML(item.category || item.source || '-')}</td>
+      <td>${escapeHTML(item.method || 'Tunai')}</td>
       <td>${escapeHTML(item.description)}</td>
       <td>${formatDate(item.cashDate)}</td>
       <td>${money(item.amount)}</td>
+      <td>${escapeHTML(item.createdBy || '-')}</td>
     </tr>
   `));
 }
@@ -617,6 +762,34 @@ function renderUserPage() {
       <td>${statusBadge(user.status || 'Aktif')}</td>
     </tr>
   `));
+}
+
+function renderReportPage(loans) {
+  if (!location.pathname.endsWith('laporan-keuangan.html')) return;
+
+  const cashIn = getRecords(storageKeys.cashIn, defaultCashIn);
+  const cashOut = [
+    ...loans.map(loan => ({ amount: Number(loan.amount || 0) })),
+    ...getRecords(storageKeys.cashOut)
+  ];
+  const totalCashIn = cashIn.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalCashOut = cashOut.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalMargin = loans.reduce((sum, loan) => sum + (Number(loan.amount || 0) * Number(loan.margin || 0) / 100), 0);
+  const activeLoans = loans.filter(loan => !['Lunas', 'Ditolak'].includes(loan.status)).length;
+
+  const reportCashIn = document.getElementById('reportCashIn');
+  const reportCashOut = document.getElementById('reportCashOut');
+  const reportMargin = document.getElementById('reportMargin');
+  if (reportCashIn) reportCashIn.textContent = money(totalCashIn);
+  if (reportCashOut) reportCashOut.textContent = money(totalCashOut);
+  if (reportMargin) reportMargin.textContent = money(totalMargin);
+
+  renderRows('#financialReportTable', [
+    `<tr><td>Kas Masuk</td><td>${money(totalCashIn)}</td><td>Total pembayaran, pelunasan, margin, dan pendapatan lain.</td></tr>`,
+    `<tr><td>Kas Keluar</td><td>${money(totalCashOut)}</td><td>Total pencairan pinjaman dan biaya operasional.</td></tr>`,
+    `<tr><td>Estimasi Margin</td><td>${money(totalMargin)}</td><td>Potensi margin dari seluruh pinjaman tercatat.</td></tr>`,
+    `<tr><td>Pinjaman Aktif</td><td>${activeLoans}</td><td>Kontrak yang masih berjalan atau dalam proses.</td></tr>`
+  ]);
 }
 
 function nextCode(prefix, records) {
@@ -642,6 +815,37 @@ function fillLoanData(loanCode, clientFieldId, collateralFieldId) {
   const collateralField = collateralFieldId ? document.getElementById(collateralFieldId) : null;
   if (clientField) clientField.value = loan.client;
   if (collateralField) collateralField.value = loan.collateralName || loan.collateralType || '';
+}
+
+function fillPaymentLoanData(loanCode) {
+  const loan = getLoanByCode(loanCode);
+  if (!loan) return;
+
+  const clientField = document.getElementById('paymentFormClient');
+  const amountField = document.getElementById('paymentFormAmount');
+  const remainingField = document.getElementById('paymentFormRemaining');
+  if (clientField) clientField.value = loan.client;
+  if (amountField && !amountField.value) amountField.value = Number(loan.monthlyPayment || 0).toFixed(2);
+  if (remainingField) remainingField.value = getRemainingBalance(loan).toFixed(2);
+}
+
+function fillContractLoanData(loanCode) {
+  const loan = getLoanByCode(loanCode);
+  if (!loan) return;
+
+  const clientField = document.getElementById('contractFormClient');
+  const amountField = document.getElementById('contractFormAmount');
+  const collateralField = document.getElementById('contractFormCollateral');
+  const dueDateField = document.getElementById('contractFormDueDate');
+  const marginField = document.getElementById('contractFormMargin');
+  const durationField = document.getElementById('contractFormDuration');
+
+  if (clientField) clientField.value = loan.client;
+  if (amountField) amountField.value = Number(loan.amount || 0).toFixed(2);
+  if (collateralField) collateralField.value = `${loan.collateralType} - ${loan.collateralName}`;
+  if (dueDateField) dueDateField.value = loan.dueDate || '';
+  if (marginField) marginField.value = Number(loan.margin || 0);
+  if (durationField) durationField.value = `${Number(loan.duration || 0)} bulan`;
 }
 
 function openDataModal(title, subtitle, bodyHtml) {
@@ -782,17 +986,49 @@ function openClientForm() {
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label>Jenis Identitas</label>
+          <select id="clientFormIdentityType">
+            <option>BI</option>
+            <option>Passport</option>
+            <option>KTP</option>
+            <option>Dokumen Lain</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label>No. Identitas</label>
           <input type="text" id="clientFormIdNumber" required />
         </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
-          <label>Status</label>
-          <select id="clientFormStatus">
-            <option>Aktif</option>
-            <option>Verifikasi</option>
-            <option>Blacklist</option>
+          <label>Tanggal Lahir</label>
+          <input type="date" id="clientFormBirthDate" />
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select id="clientFormGender">
+            <option>Pria</option>
+            <option>Wanita</option>
           </select>
         </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pekerjaan</label>
+          <input type="text" id="clientFormJobStatus" placeholder="Karyawan, wirausaha, petani..." />
+        </div>
+        <div class="form-group">
+          <label>Kontak Darurat</label>
+          <input type="text" id="clientFormEmergency" placeholder="Nama / nomor keluarga" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="clientFormStatus">
+          <option>Aktif</option>
+          <option>Verifikasi</option>
+          <option>Blacklist</option>
+        </select>
       </div>
       ${modalActions('Simpan Klien')}
     </form>
@@ -806,7 +1042,12 @@ function submitClient(event) {
     name: document.getElementById('clientFormName')?.value.trim(),
     contact: document.getElementById('clientFormContact')?.value.trim(),
     address: document.getElementById('clientFormAddress')?.value.trim(),
+    identityType: document.getElementById('clientFormIdentityType')?.value,
     idNumber: document.getElementById('clientFormIdNumber')?.value.trim(),
+    birthDate: document.getElementById('clientFormBirthDate')?.value,
+    gender: document.getElementById('clientFormGender')?.value,
+    jobStatus: document.getElementById('clientFormJobStatus')?.value.trim(),
+    emergencyContact: document.getElementById('clientFormEmergency')?.value.trim(),
     status: document.getElementById('clientFormStatus')?.value || 'Aktif'
   };
   clients.unshift(client);
@@ -817,7 +1058,11 @@ function submitClient(event) {
     { label: 'Nama Klien', value: client.name },
     { label: 'Kontak', value: client.contact },
     { label: 'Alamat', value: client.address },
-    { label: 'No. Identitas', value: client.idNumber },
+    { label: 'Identitas', value: `${client.identityType} - ${client.idNumber}` },
+    { label: 'Tanggal Lahir', value: formatDate(client.birthDate) },
+    { label: 'Gender', value: client.gender },
+    { label: 'Pekerjaan', value: client.jobStatus },
+    { label: 'Kontak Darurat', value: client.emergencyContact },
     { label: 'Status', value: client.status }
   ]), client.contact);
 }
@@ -865,6 +1110,26 @@ function openCollateralForm() {
           <input type="text" id="collateralFormDocument" placeholder="STNK/BPKB/Sertifikat atau -" />
         </div>
         <div class="form-group">
+          <label>Lokasi Penyimpanan</label>
+          <input type="text" id="collateralFormStorage" value="Brankas Utama" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Penaksir</label>
+          <input type="text" id="collateralFormAppraiser" value="${escapeHTML(getCurrentStaff())}" />
+        </div>
+        <div class="form-group">
+          <label>Tanggal Taksir</label>
+          <input type="date" id="collateralFormAppraisalDate" value="${today}" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Referensi Foto</label>
+          <input type="text" id="collateralFormPhoto" placeholder="Nama file / URL foto barang" />
+        </div>
+        <div class="form-group">
           <label>Status Jaminan</label>
           <select id="collateralFormStatus">
             <option>Disimpan</option>
@@ -888,6 +1153,10 @@ function submitCollateral(event) {
     appraisalValue: Number(document.getElementById('collateralFormValue')?.value) || 0,
     condition: document.getElementById('collateralFormCondition')?.value,
     documentNumber: document.getElementById('collateralFormDocument')?.value.trim() || '-',
+    storageLocation: document.getElementById('collateralFormStorage')?.value.trim(),
+    appraiser: document.getElementById('collateralFormAppraiser')?.value.trim(),
+    appraisalDate: document.getElementById('collateralFormAppraisalDate')?.value,
+    photoReference: document.getElementById('collateralFormPhoto')?.value.trim(),
     status: document.getElementById('collateralFormStatus')?.value || 'Disimpan'
   };
   collaterals.unshift(collateral);
@@ -900,6 +1169,10 @@ function submitCollateral(event) {
     { label: 'Nilai Taksiran', value: money(collateral.appraisalValue) },
     { label: 'Kondisi', value: collateral.condition },
     { label: 'Nomor Dokumen', value: collateral.documentNumber },
+    { label: 'Lokasi Penyimpanan', value: collateral.storageLocation },
+    { label: 'Penaksir', value: collateral.appraiser },
+    { label: 'Tanggal Taksir', value: formatDate(collateral.appraisalDate) },
+    { label: 'Referensi Foto', value: collateral.photoReference },
     { label: 'Status', value: collateral.status }
   ]));
 }
@@ -915,7 +1188,7 @@ function openPaymentForm() {
         </div>
         <div class="form-group">
           <label>Kode Pinjaman</label>
-          <select id="paymentFormLoanCode" onchange="fillLoanData(this.value, 'paymentFormClient')" required>
+          <select id="paymentFormLoanCode" onchange="fillPaymentLoanData(this.value)" required>
             <option value="">Pilih pinjaman</option>
             ${buildLoanOptions()}
           </select>
@@ -927,15 +1200,52 @@ function openPaymentForm() {
           <input type="text" id="paymentFormClient" required />
         </div>
         <div class="form-group">
-          <label>Tanggal Bayar</label>
-          <input type="date" id="paymentFormDate" value="${today}" required />
+          <label>Angsuran Ke</label>
+          <input type="number" id="paymentFormInstallment" min="1" value="1" required />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label>Jenis Pembayaran</label>
+          <select id="paymentFormType">
+            <option>Cicilan</option>
+            <option>Margin</option>
+            <option>Pelunasan</option>
+            <option>Denda</option>
+            <option>Biaya Administrasi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Metode Bayar</label>
+          <select id="paymentFormMethod">
+            <option>Tunai</option>
+            <option>Transfer Bank</option>
+            <option>Mobile Banking</option>
+            <option>POS</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tanggal Bayar</label>
+          <input type="date" id="paymentFormDate" value="${today}" required />
+        </div>
+        <div class="form-group">
           <label>Jumlah</label>
           <input type="number" id="paymentFormAmount" min="1" required />
         </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Denda</label>
+          <input type="number" id="paymentFormPenalty" min="0" value="0" />
+        </div>
+        <div class="form-group">
+          <label>Sisa Saldo Setelah Bayar</label>
+          <input type="number" id="paymentFormRemaining" min="0" value="0" />
+        </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
           <label>Status</label>
           <select id="paymentFormStatus">
@@ -943,6 +1253,10 @@ function openPaymentForm() {
             <option>Pending</option>
             <option>Ditolak</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label>Petugas</label>
+          <input type="text" id="paymentFormCreatedBy" value="${escapeHTML(getCurrentStaff())}" />
         </div>
       </div>
       ${modalActions('Simpan Pembayaran')}
@@ -957,8 +1271,14 @@ function submitPayment(event) {
     code: document.getElementById('paymentFormCode')?.value.trim(),
     loanCode: document.getElementById('paymentFormLoanCode')?.value,
     client: document.getElementById('paymentFormClient')?.value.trim(),
+    installmentNo: document.getElementById('paymentFormInstallment')?.value,
+    paymentType: document.getElementById('paymentFormType')?.value,
+    method: document.getElementById('paymentFormMethod')?.value,
     paymentDate: document.getElementById('paymentFormDate')?.value,
     amount: Number(document.getElementById('paymentFormAmount')?.value) || 0,
+    penalty: Number(document.getElementById('paymentFormPenalty')?.value) || 0,
+    remainingBalance: Number(document.getElementById('paymentFormRemaining')?.value) || 0,
+    createdBy: document.getElementById('paymentFormCreatedBy')?.value.trim(),
     status: document.getElementById('paymentFormStatus')?.value || 'Diterima'
   };
   payments.unshift(payment);
@@ -968,9 +1288,12 @@ function submitPayment(event) {
   cashIn.unshift({
     code: `KM-${payment.code.replace(/\D/g, '').padStart(3, '0')}`,
     source: 'Pembayaran',
+    category: payment.paymentType,
+    method: payment.method,
     description: `${payment.loanCode} ${payment.client}`,
     cashDate: payment.paymentDate,
-    amount: payment.amount
+    amount: payment.amount + payment.penalty,
+    createdBy: payment.createdBy
   });
   saveRecords(storageKeys.cashIn, cashIn);
 
@@ -980,8 +1303,14 @@ function submitPayment(event) {
     { label: 'Kode Bayar', value: payment.code },
     { label: 'Kode Pinjaman', value: payment.loanCode },
     { label: 'Nama Klien', value: payment.client },
+    { label: 'Angsuran Ke', value: payment.installmentNo },
+    { label: 'Jenis Pembayaran', value: payment.paymentType },
+    { label: 'Metode Bayar', value: payment.method },
     { label: 'Tanggal Bayar', value: formatDate(payment.paymentDate) },
     { label: 'Jumlah', value: money(payment.amount) },
+    { label: 'Denda', value: money(payment.penalty) },
+    { label: 'Sisa Saldo', value: money(payment.remainingBalance) },
+    { label: 'Petugas', value: payment.createdBy },
     { label: 'Status', value: payment.status }
   ]), loan?.contact || '');
 }
@@ -1068,14 +1397,30 @@ function openCashInForm() {
           <input type="text" id="cashInFormCode" value="${nextCode('KM', cashIn)}" required />
         </div>
         <div class="form-group">
-          <label>Sumber</label>
-          <select id="cashInFormSource">
+          <label>Kategori</label>
+          <select id="cashInFormCategory">
             <option>Cicilan</option>
             <option>Pelunasan</option>
             <option>Margin</option>
             <option>Biaya Administrasi</option>
+            <option>Hasil Lelang</option>
             <option>Lainnya</option>
           </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Metode Kas</label>
+          <select id="cashInFormMethod">
+            <option>Tunai</option>
+            <option>Transfer Bank</option>
+            <option>Mobile Banking</option>
+            <option>POS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Petugas</label>
+          <input type="text" id="cashInFormCreatedBy" value="${escapeHTML(getCurrentStaff())}" />
         </div>
       </div>
       <div class="form-group">
@@ -1092,6 +1437,10 @@ function openCashInForm() {
           <input type="number" id="cashInFormAmount" min="1" required />
         </div>
       </div>
+      <div class="form-group">
+        <label>Lampiran / Bukti</label>
+        <input type="text" id="cashInFormAttachment" placeholder="Nomor bukti, nama file, atau URL" />
+      </div>
       ${modalActions('Simpan Kas Masuk')}
     </form>
   `);
@@ -1102,10 +1451,14 @@ function submitCashIn(event) {
   const cashIn = getRecords(storageKeys.cashIn, defaultCashIn);
   const cashRecord = {
     code: document.getElementById('cashInFormCode')?.value.trim(),
-    source: document.getElementById('cashInFormSource')?.value,
+    source: document.getElementById('cashInFormCategory')?.value,
+    category: document.getElementById('cashInFormCategory')?.value,
+    method: document.getElementById('cashInFormMethod')?.value,
     description: document.getElementById('cashInFormDescription')?.value.trim(),
     cashDate: document.getElementById('cashInFormDate')?.value,
-    amount: Number(document.getElementById('cashInFormAmount')?.value) || 0
+    amount: Number(document.getElementById('cashInFormAmount')?.value) || 0,
+    createdBy: document.getElementById('cashInFormCreatedBy')?.value.trim(),
+    attachment: document.getElementById('cashInFormAttachment')?.value.trim()
   };
   cashIn.unshift(cashRecord);
 
@@ -1113,10 +1466,13 @@ function submitCashIn(event) {
   renderTemporaryDatabase();
   showShareOptions(`Kas Masuk - ${cashRecord.code}`, buildRecordSummary('Catatan Kas Masuk', [
     { label: 'Kode', value: cashRecord.code },
-    { label: 'Sumber', value: cashRecord.source },
+    { label: 'Kategori', value: cashRecord.category },
+    { label: 'Metode', value: cashRecord.method },
     { label: 'Keterangan', value: cashRecord.description },
     { label: 'Tanggal', value: formatDate(cashRecord.cashDate) },
-    { label: 'Jumlah', value: money(cashRecord.amount) }
+    { label: 'Jumlah', value: money(cashRecord.amount) },
+    { label: 'Petugas', value: cashRecord.createdBy },
+    { label: 'Lampiran', value: cashRecord.attachment }
   ]));
 }
 
@@ -1134,6 +1490,26 @@ function openCashOutForm() {
           <input type="text" id="cashOutFormRecipient" required />
         </div>
       </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="cashOutFormCategory">
+            <option>Pencairan Pinjaman</option>
+            <option>Operasional Kantor</option>
+            <option>Gaji Staff</option>
+            <option>Transportasi</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Metode Kas</label>
+          <select id="cashOutFormMethod">
+            <option>Tunai</option>
+            <option>Transfer Bank</option>
+            <option>Mobile Banking</option>
+          </select>
+        </div>
+      </div>
       <div class="form-group">
         <label>Keperluan</label>
         <input type="text" id="cashOutFormPurpose" required />
@@ -1146,6 +1522,16 @@ function openCashOutForm() {
         <div class="form-group">
           <label>Jumlah</label>
           <input type="number" id="cashOutFormAmount" min="1" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Petugas</label>
+          <input type="text" id="cashOutFormCreatedBy" value="${escapeHTML(getCurrentStaff())}" />
+        </div>
+        <div class="form-group">
+          <label>Lampiran / Bukti</label>
+          <input type="text" id="cashOutFormAttachment" placeholder="Nomor bukti, nama file, atau URL" />
         </div>
       </div>
       <div class="form-group">
@@ -1167,9 +1553,13 @@ function submitCashOut(event) {
   const cashRecord = {
     code: document.getElementById('cashOutFormCode')?.value.trim(),
     recipient: document.getElementById('cashOutFormRecipient')?.value.trim(),
+    category: document.getElementById('cashOutFormCategory')?.value,
+    method: document.getElementById('cashOutFormMethod')?.value,
     purpose: document.getElementById('cashOutFormPurpose')?.value.trim(),
     cashDate: document.getElementById('cashOutFormDate')?.value,
     amount: Number(document.getElementById('cashOutFormAmount')?.value) || 0,
+    createdBy: document.getElementById('cashOutFormCreatedBy')?.value.trim(),
+    attachment: document.getElementById('cashOutFormAttachment')?.value.trim(),
     status: document.getElementById('cashOutFormStatus')?.value || 'Tercatat'
   };
   cashOut.unshift(cashRecord);
@@ -1178,10 +1568,14 @@ function submitCashOut(event) {
   renderTemporaryDatabase();
   showShareOptions(`Kas Keluar - ${cashRecord.code}`, buildRecordSummary('Catatan Kas Keluar', [
     { label: 'Kode', value: cashRecord.code },
+    { label: 'Kategori', value: cashRecord.category },
     { label: 'Penerima', value: cashRecord.recipient },
     { label: 'Keperluan', value: cashRecord.purpose },
+    { label: 'Metode', value: cashRecord.method },
     { label: 'Tanggal', value: formatDate(cashRecord.cashDate) },
     { label: 'Jumlah', value: money(cashRecord.amount) },
+    { label: 'Petugas', value: cashRecord.createdBy },
+    { label: 'Lampiran', value: cashRecord.attachment },
     { label: 'Status', value: cashRecord.status }
   ]));
 }
@@ -1197,7 +1591,7 @@ function openContractForm() {
         </div>
         <div class="form-group">
           <label>Kode Pinjaman</label>
-          <select id="contractFormLoanCode" onchange="fillLoanData(this.value, 'contractFormClient')" required>
+          <select id="contractFormLoanCode" onchange="fillContractLoanData(this.value)" required>
             <option value="">Pilih pinjaman</option>
             ${buildLoanOptions()}
           </select>
@@ -1215,17 +1609,45 @@ function openContractForm() {
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label>Nilai Pinjaman</label>
+          <input type="number" id="contractFormAmount" min="0" required />
+        </div>
+        <div class="form-group">
+          <label>Margin (%)</label>
+          <input type="number" id="contractFormMargin" min="0" step="0.1" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label>Durasi</label>
           <input type="text" id="contractFormDuration" value="3 bulan" required />
         </div>
         <div class="form-group">
-          <label>Status</label>
-          <select id="contractFormStatus">
-            <option>Draft</option>
-            <option>Ditandatangani</option>
-            <option>Berakhir</option>
-          </select>
+          <label>Jatuh Tempo</label>
+          <input type="date" id="contractFormDueDate" required />
         </div>
+      </div>
+      <div class="form-group">
+        <label>Jaminan</label>
+        <input type="text" id="contractFormCollateral" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Saksi</label>
+          <input type="text" id="contractFormWitness" placeholder="Nama saksi / staff" />
+        </div>
+        <div class="form-group">
+          <label>File Kontrak</label>
+          <input type="text" id="contractFormFile" placeholder="Nomor file, nama file, atau URL" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="contractFormStatus">
+          <option>Draft</option>
+          <option>Ditandatangani</option>
+          <option>Berakhir</option>
+        </select>
       </div>
       ${modalActions('Simpan Kontrak')}
     </form>
@@ -1240,7 +1662,13 @@ function submitContract(event) {
     loanCode: document.getElementById('contractFormLoanCode')?.value,
     client: document.getElementById('contractFormClient')?.value.trim(),
     contractDate: document.getElementById('contractFormDate')?.value,
+    amount: Number(document.getElementById('contractFormAmount')?.value) || 0,
+    margin: Number(document.getElementById('contractFormMargin')?.value) || 0,
     duration: document.getElementById('contractFormDuration')?.value.trim(),
+    dueDate: document.getElementById('contractFormDueDate')?.value,
+    collateral: document.getElementById('contractFormCollateral')?.value.trim(),
+    witness: document.getElementById('contractFormWitness')?.value.trim(),
+    contractFile: document.getElementById('contractFormFile')?.value.trim(),
     status: document.getElementById('contractFormStatus')?.value || 'Draft'
   };
   contracts.unshift(contract);
@@ -1252,8 +1680,14 @@ function submitContract(event) {
     { label: 'No. Kontrak', value: contract.contractNo },
     { label: 'Kode Pinjaman', value: contract.loanCode },
     { label: 'Nama Klien', value: contract.client },
+    { label: 'Nilai Pinjaman', value: money(contract.amount) },
+    { label: 'Margin', value: `${contract.margin}%` },
     { label: 'Tanggal', value: formatDate(contract.contractDate) },
     { label: 'Durasi', value: contract.duration },
+    { label: 'Jatuh Tempo', value: formatDate(contract.dueDate) },
+    { label: 'Jaminan', value: contract.collateral },
+    { label: 'Saksi', value: contract.witness },
+    { label: 'File Kontrak', value: contract.contractFile },
     { label: 'Status', value: contract.status }
   ]), loan?.contact || '');
 }
@@ -1328,12 +1762,20 @@ function resetLoanForm() {
   setTimeout(() => {
     const monthlyPayment = document.getElementById('monthlyPayment');
     if (monthlyPayment) monthlyPayment.textContent = '$0.00';
+    const totalPayable = document.getElementById('totalPayable');
+    if (totalPayable) totalPayable.textContent = '$0.00';
 
     const loanPackage = document.getElementById('loanPackage');
     if (loanPackage) loanPackage.value = '';
 
     const loanDate = document.getElementById('loanDate');
     if (loanDate) loanDate.value = today;
+    const appraisalDate = document.getElementById('appraisalDate');
+    if (appraisalDate) appraisalDate.value = today;
+    const createdBy = document.getElementById('createdBy');
+    if (createdBy) createdBy.value = getCurrentStaff();
+    const appraiser = document.getElementById('appraiser');
+    if (appraiser) appraiser.value = getCurrentStaff();
     syncDueDate();
   }, 50);
 }
@@ -1345,20 +1787,32 @@ function submitLoan(event) {
   const client = document.getElementById('clientName')?.value.trim();
   const contact = document.getElementById('contact')?.value.trim();
   const address = document.getElementById('address')?.value.trim();
+  const identityType = document.getElementById('identityType')?.value;
   const idNumber = document.getElementById('idNumber')?.value.trim();
+  const birthDate = document.getElementById('birthDate')?.value;
+  const gender = document.getElementById('gender')?.value;
   const jobStatus = document.getElementById('jobStatus')?.value;
+  const emergencyContact = document.getElementById('emergencyContact')?.value.trim();
   const selectedPackage = getSelectedLoanPackage();
   const collateralType = document.getElementById('collateralType')?.value;
   const collateralName = document.getElementById('collateralName')?.value.trim();
   const appraisalValue = Number(document.getElementById('appraisalValue')?.value) || 0;
   const condition = document.getElementById('condition')?.value;
   const documentNumber = document.getElementById('documentNumber')?.value.trim();
+  const storageLocation = document.getElementById('storageLocation')?.value.trim();
+  const appraiser = document.getElementById('appraiser')?.value.trim();
+  const appraisalDate = document.getElementById('appraisalDate')?.value;
+  const collateralPhoto = document.getElementById('collateralPhoto')?.value.trim();
   const loanDate = document.getElementById('loanDate')?.value;
   const amount = Number(document.getElementById('loanAmount')?.value) || 0;
   const margin = Number(document.getElementById('margin')?.value) || 0;
   const duration = Number(document.getElementById('duration')?.value) || 3;
   const dueDate = document.getElementById('dueDate')?.value;
   const monthlyPayment = selectedPackage ? parseMoney(selectedPackage.monthly) : calculateLoan();
+  const disbursementMethod = document.getElementById('disbursementMethod')?.value;
+  const disbursementStatus = document.getElementById('disbursementStatus')?.value;
+  const penaltyRate = Number(document.getElementById('penaltyRate')?.value) || 0;
+  const createdBy = document.getElementById('createdBy')?.value.trim() || getCurrentStaff();
   const note = document.getElementById('note')?.value.trim();
 
   if (!code || !client || !collateralType || !collateralName || amount <= 0 || !dueDate) {
@@ -1373,20 +1827,32 @@ function submitLoan(event) {
     client,
     contact,
     address,
+    identityType,
     idNumber,
+    birthDate,
+    gender,
     jobStatus,
+    emergencyContact,
     packageName: selectedPackage?.name || '',
     collateralType,
     collateralName,
     appraisalValue,
     condition,
     documentNumber,
+    storageLocation,
+    appraiser,
+    appraisalDate,
+    collateralPhoto,
     loanDate,
     amount,
     margin,
     duration,
     dueDate,
     monthlyPayment,
+    disbursementMethod,
+    disbursementStatus,
+    penaltyRate,
+    createdBy,
     note,
     status: 'Proses'
   };
@@ -1404,19 +1870,32 @@ function submitLoan(event) {
     { label: 'Nama Klien', value: loan.client },
     { label: 'Kontak', value: loan.contact },
     { label: 'Alamat', value: loan.address },
-    { label: 'No. Identitas', value: loan.idNumber },
+    { label: 'Identitas', value: `${loan.identityType} - ${loan.idNumber}` },
+    { label: 'Tanggal Lahir', value: formatDate(loan.birthDate) },
+    { label: 'Gender', value: loan.gender },
+    { label: 'Pekerjaan', value: loan.jobStatus },
+    { label: 'Kontak Darurat', value: loan.emergencyContact },
     { label: 'Paket', value: loan.packageName || '-' },
     { label: 'Jumlah Pinjaman', value: money(loan.amount) },
     { label: 'Margin', value: `${loan.margin}%` },
     { label: 'Durasi', value: `${loan.duration} bulan` },
+    { label: 'Total Harus Dibayar', value: money(getTotalPayable(loan)) },
     { label: 'Cicilan Bulanan', value: money(loan.monthlyPayment) },
     { label: 'Tanggal Pinjam', value: formatDate(loan.loanDate) },
     { label: 'Jatuh Tempo', value: formatDate(loan.dueDate) },
+    { label: 'Metode Pencairan', value: loan.disbursementMethod },
+    { label: 'Status Pencairan', value: loan.disbursementStatus },
+    { label: 'Denda Keterlambatan', value: `${loan.penaltyRate}%` },
     { label: 'Jenis Jaminan', value: loan.collateralType },
     { label: 'Nama Barang', value: loan.collateralName },
     { label: 'Nilai Taksiran', value: money(loan.appraisalValue) },
     { label: 'Kondisi', value: loan.condition },
     { label: 'Nomor Dokumen', value: loan.documentNumber || '-' },
+    { label: 'Lokasi Penyimpanan', value: loan.storageLocation },
+    { label: 'Penaksir', value: loan.appraiser },
+    { label: 'Tanggal Taksir', value: formatDate(loan.appraisalDate) },
+    { label: 'Referensi Foto', value: loan.collateralPhoto },
+    { label: 'Petugas', value: loan.createdBy },
     { label: 'Status', value: loan.status },
     { label: 'Catatan', value: loan.note }
   ]), loan.contact);

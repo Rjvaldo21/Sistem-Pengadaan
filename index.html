@@ -74,12 +74,12 @@
           </div>
           <div class="table-wrap">
             <table class="data-table">
-              <thead><tr><th>Kode Pinjaman</th><th>Nama Klien</th><th>Jenis Jaminan</th><th>Tanggal Pinjam</th><th>Jumlah Pinjaman</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
+              <thead><tr><th>Kode Pinjaman</th><th>Nama Klien</th><th>Jenis Jaminan</th><th>Tanggal Pinjam</th><th>Jumlah Pinjaman</th><th>Sisa Tagihan</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
               <tbody id="loanTable">
-                <tr><td>PN-2026-001</td><td>Jo&atilde;o Pereira</td><td>Motor</td><td>13 Mei 2026</td><td>$500</td><td>13 Agustus 2026</td><td><span class="badge badge-success">Aktif</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-001')">Detail</button></td></tr>
-                <tr><td>PN-2026-002</td><td>Maria Soares</td><td>Emas</td><td>12 Mei 2026</td><td>$1,000</td><td>12 Agustus 2026</td><td><span class="badge badge-info">Lunas</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-002')">Detail</button></td></tr>
-                <tr><td>PN-2026-003</td><td>Carlos Ximenes</td><td>Mobil</td><td>11 Mei 2026</td><td>$2,000</td><td>11 Agustus 2026</td><td><span class="badge badge-danger">Terlambat</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-003')">Detail</button></td></tr>
-                <tr><td>PN-2026-004</td><td>Ana Martins</td><td>Laptop</td><td>10 Mei 2026</td><td>$300</td><td>10 Agustus 2026</td><td><span class="badge badge-warning">Proses</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-004')">Detail</button></td></tr>
+                <tr><td>PN-2026-001</td><td>Jo&atilde;o Pereira</td><td>Motor</td><td>13 Mei 2026</td><td>$500</td><td>$375</td><td>13 Agustus 2026</td><td><span class="badge badge-success">Aktif</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-001')">Detail</button></td></tr>
+                <tr><td>PN-2026-002</td><td>Maria Soares</td><td>Emas</td><td>12 Mei 2026</td><td>$1,000</td><td>$0</td><td>12 Agustus 2026</td><td><span class="badge badge-info">Lunas</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-002')">Detail</button></td></tr>
+                <tr><td>PN-2026-003</td><td>Carlos Ximenes</td><td>Mobil</td><td>11 Mei 2026</td><td>$2,000</td><td>$2,250</td><td>11 Agustus 2026</td><td><span class="badge badge-danger">Terlambat</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-003')">Detail</button></td></tr>
+                <tr><td>PN-2026-004</td><td>Ana Martins</td><td>Laptop</td><td>10 Mei 2026</td><td>$300</td><td>$345</td><td>10 Agustus 2026</td><td><span class="badge badge-warning">Proses</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-004')">Detail</button></td></tr>
               </tbody>
             </table>
           </div>
@@ -94,8 +94,16 @@
             </div>
             <div class="form-group"><label>Alamat</label><input type="text" id="address" placeholder="Alamat klien" /></div>
             <div class="form-row">
+              <div class="form-group"><label>Jenis Identitas</label><select id="identityType"><option>BI</option><option>Passport</option><option>KTP</option><option>Dokumen Lain</option></select></div>
               <div class="form-group"><label>No. Kartu Identitas</label><input type="text" id="idNumber" placeholder="BI/Passport/ID" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Tanggal Lahir</label><input type="date" id="birthDate" /></div>
+              <div class="form-group"><label>Gender</label><select id="gender"><option>Pria</option><option>Wanita</option></select></div>
+            </div>
+            <div class="form-row">
               <div class="form-group"><label>Status Pekerjaan</label><select id="jobStatus"><option>Karyawan</option><option>Wirausaha</option><option>Petani</option><option>Belum bekerja</option></select></div>
+              <div class="form-group"><label>Kontak Darurat</label><input type="text" id="emergencyContact" placeholder="Nama / nomor keluarga" /></div>
             </div>
             <div class="form-row">
               <div class="form-group"><label>Kode Pinjaman</label><input type="text" id="loanCode" value="PN-2026-005" required /></div>
@@ -116,6 +124,14 @@
               <div class="form-group"><label>Tanggal Jatuh Tempo</label><input type="date" id="dueDate" required /></div>
             </div>
             <div class="form-row">
+              <div class="form-group"><label>Metode Pencairan</label><select id="disbursementMethod"><option>Tunai</option><option>Transfer Bank</option><option>Mobile Banking</option></select></div>
+              <div class="form-group"><label>Status Pencairan</label><select id="disbursementStatus"><option>Proses</option><option>Dicairkan</option><option>Ditahan</option></select></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Denda Keterlambatan (%)</label><input type="number" id="penaltyRate" value="0" min="0" step="0.1" /></div>
+              <div class="form-group"><label>Petugas</label><input type="text" id="createdBy" placeholder="Nama staff" /></div>
+            </div>
+            <div class="form-row">
               <div class="form-group"><label>Jenis Jaminan</label><select id="collateralType"><option>Emas</option><option>Motor</option><option>Mobil</option><option>Laptop</option><option>Telepon</option><option>Rumah</option><option>Tanah</option><option>Dokumen Kendaraan</option></select></div>
               <div class="form-group"><label>Nama Barang</label><input type="text" id="collateralName" placeholder="Contoh: Yamaha NMAX, Emas 20 gram" required /></div>
             </div>
@@ -123,8 +139,16 @@
               <div class="form-group"><label>Nilai Taksiran</label><input type="number" id="appraisalValue" value="0" min="0" /></div>
               <div class="form-group"><label>Kondisi Barang</label><select id="condition"><option>Baik</option><option>Rusak ringan</option><option>Rusak berat</option></select></div>
             </div>
-            <div class="form-group"><label>Nomor Dokumen</label><input type="text" id="documentNumber" placeholder="Nomor STNK/BPKB/sertifikat jika ada" /></div>
-            <div class="total-box"><span>Cicilan per Bulan</span><strong id="monthlyPayment">$0.00</strong></div>
+            <div class="form-row">
+              <div class="form-group"><label>Nomor Dokumen</label><input type="text" id="documentNumber" placeholder="Nomor STNK/BPKB/sertifikat jika ada" /></div>
+              <div class="form-group"><label>Lokasi Penyimpanan</label><input type="text" id="storageLocation" value="Brankas Utama" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Penaksir</label><input type="text" id="appraiser" placeholder="Nama penaksir" /></div>
+              <div class="form-group"><label>Tanggal Taksir</label><input type="date" id="appraisalDate" /></div>
+            </div>
+            <div class="form-group"><label>Referensi Foto Jaminan</label><input type="text" id="collateralPhoto" placeholder="Nama file / URL foto barang" /></div>
+            <div class="total-grid"><div class="total-box"><span>Total Harus Dibayar</span><strong id="totalPayable">$0.00</strong></div><div class="total-box"><span>Cicilan per Bulan</span><strong id="monthlyPayment">$0.00</strong></div></div>
             <div class="form-group"><label>Catatan</label><textarea id="note" placeholder="Catatan taksiran, risiko, atau kondisi jaminan..."></textarea></div>
             <div class="action-buttons"><button type="reset" class="btn btn-light" onclick="resetLoanForm()">Reset</button><button type="submit" class="btn btn-primary">Simpan Pinjaman</button></div>
           </form>
