@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIREI CHIBA PE&Ntilde;OR - Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-card">
+      <div class="login-brand">
+        <div class="brand-logo login-logo">
+          <img src="assets/logo.png" alt="HIREI CHIBA PE&Ntilde;OR logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" />
+          <span class="brand-logo-fallback">HC</span>
+        </div>
+        <div>
+          <h1>HIREI CHIBA PE&Ntilde;OR</h1>
+          <p>Pawn & Loan Management</p>
+        </div>
+      </div>
+
+      <form class="login-form" onsubmit="login(event)">
+        <div class="form-group">
+          <label>Email / Username</label>
+          <input type="text" id="loginUser" placeholder="admin@hireichiba.local" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Masukkan password" required />
+        </div>
+        <button type="submit" class="btn btn-primary login-button">Login</button>
+      </form>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Login berhasil.</div>
+  <script src="app.js"></script>
+</body>
+</html>

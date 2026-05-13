@@ -3,783 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Pengadaan - Frontend UI</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --secondary: #0f172a;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --danger: #dc2626;
-      --radius: 18px;
-      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 280px;
-      background: linear-gradient(180deg, #0f172a, #111827);
-      color: white;
-      padding: 24px;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      z-index: 50;
-      transition: 0.3s ease;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .brand-logo {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      font-size: 20px;
-    }
-
-    .brand h1 {
-      font-size: 18px;
-      line-height: 1.2;
-    }
-
-    .brand span {
-      color: #94a3b8;
-      font-size: 12px;
-    }
-
-    .menu-label {
-      color: #94a3b8;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin: 24px 0 10px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 14px;
-      color: #cbd5e1;
-      border-radius: 14px;
-      cursor: pointer;
-      margin-bottom: 6px;
-      transition: 0.2s ease;
-      font-size: 14px;
-    }
-
-    .nav-item:hover,
-    .nav-item.active {
-      background: rgba(37, 99, 235, 0.18);
-      color: #ffffff;
-    }
-
-    .main {
-      flex: 1;
-      margin-left: 280px;
-      padding: 24px;
-    }
-
-    .topbar {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .topbar-left h2 {
-      font-size: 24px;
-      margin-bottom: 4px;
-    }
-
-    .topbar-left p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .search-box {
-      position: relative;
-    }
-
-    .search-box input {
-      width: 260px;
-      padding: 12px 14px 12px 40px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline: none;
-      background: #f8fafc;
-    }
-
-    .search-box span {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 12px 16px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-
-    .btn-light {
-      background: #f1f5f9;
-      color: var(--text);
-    }
-
-    .btn-danger {
-      background: #fee2e2;
-      color: var(--danger);
-    }
-
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::after {
-      content: "";
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      right: -35px;
-      top: -35px;
-      background: rgba(37, 99, 235, 0.08);
-      border-radius: 50%;
-    }
-
-    .stat-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: #eff6ff;
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-
-    .stat-card h3 {
-      font-size: 28px;
-      margin-bottom: 4px;
-    }
-
-    .stat-card p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 0.9fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .panel-header h3 {
-      font-size: 18px;
-    }
-
-    .panel-header p {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 3px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 15px 18px;
-      text-align: left;
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    th {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      background: #f8fafc;
-    }
-
-    tbody tr:hover {
-      background: #f8fafc;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .badge-success {
-      background: #dcfce7;
-      color: var(--success);
-    }
-
-    .badge-warning {
-      background: #fef3c7;
-      color: #b45309;
-    }
-
-    .badge-danger {
-      background: #fee2e2;
-      color: var(--danger);
-    }
-
-    .badge-info {
-      background: #dbeafe;
-      color: var(--primary);
-    }
-
-    .form-panel {
-      padding: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--secondary);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      outline: none;
-      background: #f8fafc;
-      color: var(--text);
-      transition: 0.2s ease;
-    }
-
-    textarea {
-      min-height: 95px;
-      resize: vertical;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
-    }
-
-    .items-box {
-      background: #f8fafc;
-      border: 1px dashed #cbd5e1;
-      border-radius: 15px;
-      padding: 14px;
-      margin-bottom: 15px;
-    }
-
-    .item-row {
-      display: grid;
-      grid-template-columns: 1.4fr 0.6fr 0.8fr auto;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .item-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .total-box {
-      background: linear-gradient(135deg, #eff6ff, #f8fafc);
-      border-radius: 16px;
-      padding: 16px;
-      margin: 15px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #dbeafe;
-    }
-
-    .total-box span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .total-box strong {
-      font-size: 24px;
-      color: var(--primary);
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 16px;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 100;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .modal {
-      width: min(560px, 100%);
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
-      overflow: hidden;
-      animation: pop 0.25s ease;
-    }
-
-    @keyframes pop {
-      from { transform: translateY(14px) scale(0.96); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .modal-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-body {
-      padding: 20px;
-    }
-
-    .close-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      border: none;
-      background: #f1f5f9;
-      cursor: pointer;
-      font-size: 20px;
-    }
-
-    .mobile-toggle {
-      display: none;
-      border: none;
-      background: #f1f5f9;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .toast {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      background: #0f172a;
-      color: white;
-      padding: 14px 18px;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      display: none;
-      z-index: 200;
-      font-size: 14px;
-    }
-
-    .toast.show {
-      display: block;
-    }
-
-    @media (max-width: 1180px) {
-      .grid-cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.show {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 16px;
-      }
-
-      .mobile-toggle {
-        display: inline-flex;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .topbar-actions {
-        width: 100%;
-        flex-wrap: wrap;
-      }
-
-      .search-box,
-      .search-box input {
-        width: 100%;
-      }
-
-      .grid-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .form-row,
-      .item-row {
-        grid-template-columns: 1fr;
-      }
-
-      table {
-        min-width: 760px;
-      }
-
-      .table-wrap {
-        overflow-x: auto;
-      }
-    }
-  </style>
+  <title>HIREI CHIBA PE&Ntilde;OR - Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <div class="brand-logo">PG</div>
+        <div class="brand-logo"><img src="assets/logo.png" alt="HIREI CHIBA PE&Ntilde;OR logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><span class="brand-logo-fallback">HC</span></div>
         <div>
-          <h1>Sistem Pengadaan</h1>
-          <span>Procurement Management</span>
+          <h1>HIREI CHIBA PE&Ntilde;OR</h1>
+          <span>Pawn & Loan Management</span>
         </div>
       </div>
 
-      <div class="menu-label">Menu Utama</div>
-      <div class="nav-item active">📊 Dashboard</div>
-      <div class="nav-item">📝 Permintaan Pengadaan</div>
-      <div class="nav-item">🏢 Vendor / Supplier</div>
-      <div class="nav-item">📦 Data Barang</div>
-      <div class="nav-item">✅ Approval</div>
-      <div class="nav-item">📄 Laporan</div>
+      <div class="menu-label">Operasional</div>
+      <a class="nav-item active" href="index.html">Dashboard</a>
+      <a class="nav-item" href="klien.html">Klien</a>
+      <a class="nav-item" href="pinjaman.html">Pinjaman</a>
+      <a class="nav-item" href="jaminan.html">Jaminan</a>
+      <a class="nav-item" href="pembayaran.html">Pembayaran</a>
+      <a class="nav-item" href="jatuh-tempo.html">Jatuh Tempo</a>
+      <a class="nav-item" href="lelang.html">Lelang</a>
 
-      <div class="menu-label">Pengaturan</div>
-      <div class="nav-item">👥 User & Role</div>
-      <div class="nav-item">⚙️ Konfigurasi</div>
+      <div class="menu-label">Keuangan</div>
+      <a class="nav-item" href="kas-masuk.html">Kas Masuk</a>
+      <a class="nav-item" href="kas-keluar.html">Kas Keluar</a>
+      <a class="nav-item" href="laporan-keuangan.html">Laporan Keuangan</a>
+
+      <div class="menu-label">Dokumen & Sistem</div>
+      <a class="nav-item" href="kontrak.html">Kontrak</a>
+      <a class="nav-item" href="user-role.html">User & Role</a>
+      <a class="nav-item" href="pengaturan.html">Pengaturan</a>
+
+      <div class="menu-label">Akun</div>
+      <a class="nav-item nav-logout" href="login.html" onclick="logout(event)">Logout</a>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div style="display:flex; gap:12px; align-items:center;">
-          <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
           <div class="topbar-left">
-            <h2>Dashboard Pengadaan</h2>
-            <p>Kelola permintaan, vendor, status approval, dan laporan pengadaan.</p>
+            <h2>Dashboard</h2>
+            <p>Ringkasan pinjaman, jaminan, kas, dan aktivitas penhoria.</p>
           </div>
         </div>
 
         <div class="topbar-actions">
           <div class="search-box">
-            <span>🔎</span>
-            <input type="text" id="searchInput" placeholder="Cari kode, unit, vendor..." onkeyup="searchTable()" />
+            <span>&#128269;</span>
+            <input type="text" id="searchInput" placeholder="Cari klien, pinjaman, jaminan..." onkeyup="searchTable()" />
           </div>
-          <button class="btn btn-primary" onclick="openModal()">+ Buat Pengadaan</button>
+          <button class="btn btn-primary" onclick="openModal()">+ Pinjaman Baru</button>
         </div>
       </div>
 
       <section class="grid-cards">
-        <div class="stat-card">
-          <div class="stat-icon">📝</div>
-          <h3 id="totalRequests">4</h3>
-          <p>Total Permintaan</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">⏳</div>
-          <h3>2</h3>
-          <p>Menunggu Approval</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <h3>1</h3>
-          <p>Disetujui</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">💰</div>
-          <h3>$4,850</h3>
-          <p>Total Estimasi Biaya</p>
-        </div>
+        <div class="stat-card"><div class="stat-icon">KL</div><h3>84</h3><p>Total Klien</p></div>
+        <div class="stat-card"><div class="stat-icon">PN</div><h3>$28,300</h3><p>Pinjaman Aktif</p></div>
+        <div class="stat-card"><div class="stat-icon">JM</div><h3>56</h3><p>Jaminan Disimpan</p></div>
+        <div class="stat-card"><div class="stat-icon">KS</div><h3>$50,000</h3><p>Modal Awal</p></div>
       </section>
 
       <section class="content-grid">
         <div class="panel">
           <div class="panel-header">
-            <div>
-              <h3>Daftar Pengadaan Terbaru</h3>
-              <p>Monitoring status permintaan pengadaan barang/jasa.</p>
-            </div>
-            <button class="btn btn-light" onclick="exportData()">⬇ Export</button>
+            <div><h3>Daftar Pinjaman Terbaru</h3><p>Monitoring pinjaman, jaminan, jatuh tempo, dan status pembayaran.</p></div>
+            <button class="btn btn-light" onclick="exportData()">Export</button>
           </div>
-
           <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Kode</th>
-                  <th>Unit</th>
-                  <th>Vendor</th>
-                  <th>Tanggal</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="procurementTable">
-                <tr>
-                  <td>PG-2026-001</td>
-                  <td>IT Department</td>
-                  <td>Techno Dili</td>
-                  <td>13 Mei 2026</td>
-                  <td>$1,250</td>
-                  <td><span class="badge badge-warning">Pending</span></td>
-                  <td><button class="btn btn-light" onclick="viewDetail('PG-2026-001')">Detail</button></td>
-                </tr>
-                <tr>
-                  <td>PG-2026-002</td>
-                  <td>Finance</td>
-                  <td>Office Mart</td>
-                  <td>12 Mei 2026</td>
-                  <td>$850</td>
-                  <td><span class="badge badge-success">Approved</span></td>
-                  <td><button class="btn btn-light" onclick="viewDetail('PG-2026-002')">Detail</button></td>
-                </tr>
-                <tr>
-                  <td>PG-2026-003</td>
-                  <td>Logistic</td>
-                  <td>Global Supply</td>
-                  <td>11 Mei 2026</td>
-                  <td>$2,300</td>
-                  <td><span class="badge badge-info">Process</span></td>
-                  <td><button class="btn btn-light" onclick="viewDetail('PG-2026-003')">Detail</button></td>
-                </tr>
-                <tr>
-                  <td>PG-2026-004</td>
-                  <td>Admin</td>
-                  <td>Print Center</td>
-                  <td>10 Mei 2026</td>
-                  <td>$450</td>
-                  <td><span class="badge badge-danger">Rejected</span></td>
-                  <td><button class="btn btn-light" onclick="viewDetail('PG-2026-004')">Detail</button></td>
-                </tr>
+            <table class="data-table">
+              <thead><tr><th>Kode Pinjaman</th><th>Nama Klien</th><th>Jenis Jaminan</th><th>Tanggal Pinjam</th><th>Jumlah Pinjaman</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="loanTable">
+                <tr><td>PN-2026-001</td><td>Jo&atilde;o Pereira</td><td>Motor</td><td>13 Mei 2026</td><td>$500</td><td>13 Agustus 2026</td><td><span class="badge badge-success">Aktif</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-001')">Detail</button></td></tr>
+                <tr><td>PN-2026-002</td><td>Maria Soares</td><td>Emas</td><td>12 Mei 2026</td><td>$1,000</td><td>12 Agustus 2026</td><td><span class="badge badge-info">Lunas</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-002')">Detail</button></td></tr>
+                <tr><td>PN-2026-003</td><td>Carlos Ximenes</td><td>Mobil</td><td>11 Mei 2026</td><td>$2,000</td><td>11 Agustus 2026</td><td><span class="badge badge-danger">Terlambat</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-003')">Detail</button></td></tr>
+                <tr><td>PN-2026-004</td><td>Ana Martins</td><td>Laptop</td><td>10 Mei 2026</td><td>$300</td><td>10 Agustus 2026</td><td><span class="badge badge-warning">Proses</span></td><td><button class="btn btn-light" onclick="viewDetail('PN-2026-004')">Detail</button></td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panel-header">
-            <div>
-              <h3>Form Pengadaan Cepat</h3>
-              <p>Input permintaan pengadaan baru.</p>
-            </div>
-          </div>
-
-          <form class="form-panel" id="procurementForm" onsubmit="submitProcurement(event)">
+          <div class="panel-header"><div><h3>Form Pinjaman / Penhoria</h3><p>Input data klien, pinjaman, dan jaminan.</p></div></div>
+          <form class="form-panel" id="loanForm" onsubmit="submitLoan(event)">
             <div class="form-row">
-              <div class="form-group">
-                <label>Kode Pengadaan</label>
-                <input type="text" id="code" value="PG-2026-005" required />
-              </div>
-              <div class="form-group">
-                <label>Tanggal</label>
-                <input type="date" id="date" required />
-              </div>
+              <div class="form-group"><label>Nama Klien</label><input type="text" id="clientName" placeholder="Nama lengkap klien" required /></div>
+              <div class="form-group"><label>Nomor Kontak</label><input type="text" id="contact" placeholder="Nomor telepon" required /></div>
             </div>
-
+            <div class="form-group"><label>Alamat</label><input type="text" id="address" placeholder="Alamat klien" /></div>
             <div class="form-row">
-              <div class="form-group">
-                <label>Unit / Departemen</label>
-                <select id="department" required>
-                  <option value="">Pilih Unit</option>
-                  <option>IT Department</option>
-                  <option>Finance</option>
-                  <option>Admin</option>
-                  <option>Logistic</option>
-                  <option>Procurement</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Vendor / Supplier</label>
-                <select id="vendor" required>
-                  <option value="">Pilih Vendor</option>
-                  <option>Techno Dili</option>
-                  <option>Office Mart</option>
-                  <option>Global Supply</option>
-                  <option>Print Center</option>
-                  <option>Local Vendor</option>
-                </select>
-              </div>
+              <div class="form-group"><label>No. Kartu Identitas</label><input type="text" id="idNumber" placeholder="BI/Passport/ID" /></div>
+              <div class="form-group"><label>Status Pekerjaan</label><select id="jobStatus"><option>Karyawan</option><option>Wirausaha</option><option>Petani</option><option>Belum bekerja</option></select></div>
             </div>
-
+            <div class="form-row">
+              <div class="form-group"><label>Kode Pinjaman</label><input type="text" id="loanCode" value="PN-2026-005" required /></div>
+              <div class="form-group"><label>Tanggal Pinjam</label><input type="date" id="loanDate" required /></div>
+            </div>
             <div class="form-group">
-              <label>Prioritas</label>
-              <select id="priority" required>
-                <option value="Normal">Normal</option>
-                <option value="Urgent">Urgent</option>
-                <option value="Low">Low</option>
+              <label>Paket Pinjaman</label>
+              <select id="loanPackage" onchange="applyLoanPackage()">
+                <option value="">Pilih paket pinjaman</option>
               </select>
             </div>
-
-            <label>Item Barang / Jasa</label>
-            <div class="items-box" id="itemsBox">
-              <div class="item-row">
-                <input type="text" placeholder="Nama barang/jasa" class="item-name" required />
-                <input type="number" placeholder="Qty" class="item-qty" value="1" min="1" oninput="calculateTotal()" required />
-                <input type="number" placeholder="Harga" class="item-price" value="0" min="0" oninput="calculateTotal()" required />
-                <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>
-              </div>
+            <div class="form-row">
+              <div class="form-group"><label>Jumlah Pinjaman</label><input type="number" id="loanAmount" value="0" min="0" oninput="calculateLoan()" required /></div>
+              <div class="form-group"><label>Margin / Bunga (%)</label><input type="number" id="margin" value="15" min="0" step="0.1" oninput="calculateLoan()" required /></div>
             </div>
-
-            <button type="button" class="btn btn-light" onclick="addItem()">+ Tambah Item</button>
-
-            <div class="total-box">
-              <span>Total Estimasi</span>
-              <strong id="totalAmount">$0.00</strong>
+            <div class="form-row">
+              <div class="form-group"><label>Durasi</label><select id="duration" onchange="calculateLoan()"><option value="3">3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div>
+              <div class="form-group"><label>Tanggal Jatuh Tempo</label><input type="date" id="dueDate" required /></div>
             </div>
-
-            <div class="form-group">
-              <label>Catatan / Keterangan</label>
-              <textarea id="note" placeholder="Contoh: Pengadaan laptop untuk kebutuhan operasional tim IT..."></textarea>
+            <div class="form-row">
+              <div class="form-group"><label>Jenis Jaminan</label><select id="collateralType"><option>Emas</option><option>Motor</option><option>Mobil</option><option>Laptop</option><option>Telepon</option><option>Rumah</option><option>Tanah</option><option>Dokumen Kendaraan</option></select></div>
+              <div class="form-group"><label>Nama Barang</label><input type="text" id="collateralName" placeholder="Contoh: Yamaha NMAX, Emas 20 gram" required /></div>
             </div>
-
-            <div class="action-buttons">
-              <button type="reset" class="btn btn-light" onclick="resetTotal()">Reset</button>
-              <button type="submit" class="btn btn-primary">Simpan Pengadaan</button>
+            <div class="form-row">
+              <div class="form-group"><label>Nilai Taksiran</label><input type="number" id="appraisalValue" value="0" min="0" /></div>
+              <div class="form-group"><label>Kondisi Barang</label><select id="condition"><option>Baik</option><option>Rusak ringan</option><option>Rusak berat</option></select></div>
             </div>
+            <div class="form-group"><label>Nomor Dokumen</label><input type="text" id="documentNumber" placeholder="Nomor STNK/BPKB/sertifikat jika ada" /></div>
+            <div class="total-box"><span>Cicilan per Bulan</span><strong id="monthlyPayment">$0.00</strong></div>
+            <div class="form-group"><label>Catatan</label><textarea id="note" placeholder="Catatan taksiran, risiko, atau kondisi jaminan..."></textarea></div>
+            <div class="action-buttons"><button type="reset" class="btn btn-light" onclick="resetLoanForm()">Reset</button><button type="submit" class="btn btn-primary">Simpan Pinjaman</button></div>
           </form>
         </div>
       </section>
@@ -790,197 +137,22 @@
     <div class="modal">
       <div class="modal-header">
         <div>
-          <h3>Buat Pengadaan Baru</h3>
-          <p style="color:#64748b; font-size:13px; margin-top:4px;">Gunakan form di sebelah kanan atau lanjutkan dari modal ini.</p>
+          <h3>Buat Pinjaman Baru</h3>
+          <p style="color:#64748b; font-size:13px; margin-top:4px;">Input data klien, pinjaman, dan jaminan dari Dashboard.</p>
         </div>
-        <button class="close-btn" onclick="closeModal()">×</button>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body">
         <p style="line-height:1.7; color:#475569; margin-bottom:18px;">
-          Untuk membuat pengadaan baru, isi data kode pengadaan, departemen, vendor, item barang/jasa, jumlah, harga, dan catatan. Setelah disimpan, data akan langsung masuk ke tabel daftar pengadaan.
+          Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.
         </p>
-        <button class="btn btn-primary" onclick="closeModal()">Mulai Isi Form</button>
+        <a class="btn btn-primary" href="index.html">Buka Dashboard</a>
       </div>
     </div>
   </div>
 
   <div class="toast" id="toast">Data berhasil disimpan.</div>
 
-  <script>
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').value = today;
-
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('show');
-    }
-
-    function openModal() {
-      document.getElementById('modalOverlay').classList.add('show');
-    }
-
-    function closeModal() {
-      document.getElementById('modalOverlay').classList.remove('show');
-      document.getElementById('code').focus();
-    }
-
-    function addItem() {
-      const itemsBox = document.getElementById('itemsBox');
-      const row = document.createElement('div');
-      row.className = 'item-row';
-      row.innerHTML = `
-        <input type="text" placeholder="Nama barang/jasa" class="item-name" required />
-        <input type="number" placeholder="Qty" class="item-qty" value="1" min="1" oninput="calculateTotal()" required />
-        <input type="number" placeholder="Harga" class="item-price" value="0" min="0" oninput="calculateTotal()" required />
-        <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>
-      `;
-      itemsBox.appendChild(row);
-    }
-
-    function removeItem(button) {
-      const rows = document.querySelectorAll('.item-row');
-      if (rows.length === 1) {
-        showToast('Minimal harus ada 1 item pengadaan.');
-        return;
-      }
-      button.closest('.item-row').remove();
-      calculateTotal();
-    }
-
-    function calculateTotal() {
-      const rows = document.querySelectorAll('.item-row');
-      let total = 0;
-      rows.forEach(row => {
-        const qty = Number(row.querySelector('.item-qty').value) || 0;
-        const price = Number(row.querySelector('.item-price').value) || 0;
-        total += qty * price;
-      });
-      document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
-      return total;
-    }
-
-    function resetTotal() {
-      setTimeout(() => {
-        document.getElementById('totalAmount').textContent = '$0.00';
-        const itemsBox = document.getElementById('itemsBox');
-        itemsBox.innerHTML = `
-          <div class="item-row">
-            <input type="text" placeholder="Nama barang/jasa" class="item-name" required />
-            <input type="number" placeholder="Qty" class="item-qty" value="1" min="1" oninput="calculateTotal()" required />
-            <input type="number" placeholder="Harga" class="item-price" value="0" min="0" oninput="calculateTotal()" required />
-            <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>
-          </div>
-        `;
-        document.getElementById('date').value = today;
-      }, 50);
-    }
-
-    function submitProcurement(event) {
-      event.preventDefault();
-
-      const code = document.getElementById('code').value.trim();
-      const department = document.getElementById('department').value;
-      const vendor = document.getElementById('vendor').value;
-      const date = document.getElementById('date').value;
-      const total = calculateTotal();
-
-      if (!code || !department || !vendor || total <= 0) {
-        showToast('Lengkapi data dan pastikan total lebih dari $0.');
-        return;
-      }
-
-      const formattedDate = formatDate(date);
-      const table = document.getElementById('procurementTable');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${escapeHTML(code)}</td>
-        <td>${escapeHTML(department)}</td>
-        <td>${escapeHTML(vendor)}</td>
-        <td>${formattedDate}</td>
-        <td>$${total.toFixed(2)}</td>
-        <td><span class="badge badge-warning">Pending</span></td>
-        <td><button class="btn btn-light" onclick="viewDetail('${escapeHTML(code)}')">Detail</button></td>
-      `;
-      table.prepend(row);
-
-      const totalRequests = document.getElementById('totalRequests');
-      totalRequests.textContent = Number(totalRequests.textContent) + 1;
-
-      document.getElementById('procurementForm').reset();
-      resetTotal();
-      showToast('Pengadaan berhasil ditambahkan.');
-    }
-
-    function searchTable() {
-      const keyword = document.getElementById('searchInput').value.toLowerCase();
-      const rows = document.querySelectorAll('#procurementTable tr');
-
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(keyword) ? '' : 'none';
-      });
-    }
-
-    function viewDetail(code) {
-      showToast(`Membuka detail ${code}`);
-    }
-
-    function exportData() {
-      const rows = document.querySelectorAll('#procurementTable tr');
-      let csv = 'Kode,Unit,Vendor,Tanggal,Total,Status\n';
-
-      rows.forEach(row => {
-        if (row.style.display === 'none') return;
-        const cells = row.querySelectorAll('td');
-        if (cells.length) {
-          csv += [
-            cells[0].innerText,
-            cells[1].innerText,
-            cells[2].innerText,
-            cells[3].innerText,
-            cells[4].innerText,
-            cells[5].innerText
-          ].join(',') + '\n';
-        }
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'data-pengadaan.csv';
-      link.click();
-      URL.revokeObjectURL(url);
-      showToast('Data berhasil diexport ke CSV.');
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-
-    function formatDate(dateString) {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-
-    function escapeHTML(value) {
-      return value
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
-    document.getElementById('modalOverlay').addEventListener('click', function(event) {
-      if (event.target === this) closeModal();
-    });
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIREI CHIBA PE&Ntilde;OR - Jaminan</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo"><img src="assets/logo.png" alt="HIREI CHIBA PE&Ntilde;OR logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><span class="brand-logo-fallback">HC</span></div>
+        <div>
+          <h1>HIREI CHIBA PE&Ntilde;OR</h1>
+          <span>Pawn & Loan Management</span>
+        </div>
+      </div>
+
+      <div class="menu-label">Operasional</div>
+      <a class="nav-item" href="index.html">Dashboard</a>
+      <a class="nav-item" href="klien.html">Klien</a>
+      <a class="nav-item" href="pinjaman.html">Pinjaman</a>
+      <a class="nav-item active" href="jaminan.html">Jaminan</a>
+      <a class="nav-item" href="pembayaran.html">Pembayaran</a>
+      <a class="nav-item" href="jatuh-tempo.html">Jatuh Tempo</a>
+      <a class="nav-item" href="lelang.html">Lelang</a>
+
+      <div class="menu-label">Keuangan</div>
+      <a class="nav-item" href="kas-masuk.html">Kas Masuk</a>
+      <a class="nav-item" href="kas-keluar.html">Kas Keluar</a>
+      <a class="nav-item" href="laporan-keuangan.html">Laporan Keuangan</a>
+
+      <div class="menu-label">Dokumen & Sistem</div>
+      <a class="nav-item" href="kontrak.html">Kontrak</a>
+      <a class="nav-item" href="user-role.html">User & Role</a>
+      <a class="nav-item" href="pengaturan.html">Pengaturan</a>
+
+      <div class="menu-label">Akun</div>
+      <a class="nav-item nav-logout" href="login.html" onclick="logout(event)">Logout</a>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
+          <div class="topbar-left">
+            <h2>Jaminan</h2>
+            <p>Kelola barang dan dokumen aset yang dijadikan jaminan.</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="search-box">
+            <span>&#128269;</span>
+            <input type="text" id="searchInput" placeholder="Cari klien, pinjaman, jaminan..." onkeyup="searchTable()" />
+          </div>
+          <button class="btn btn-primary" onclick="openCollateralForm()">+ Tambah Jaminan</button>
+        </div>
+      </div>
+
+<section class="page-stack"><div class="panel"><div class="panel-header"><div><h3>Data Jaminan</h3><p>Barang dan dokumen aset yang ditahan sebagai jaminan.</p></div><button class="btn btn-primary" onclick="openCollateralForm()">+ Tambah Jaminan</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Jenis Jaminan</th><th>Nama Barang</th><th>Nilai Taksiran</th><th>Kondisi</th><th>Nomor Dokumen</th><th>Status Jaminan</th></tr></thead><tbody><tr><td>Motor</td><td>Honda Beat 2022</td><td>$900</td><td>Baik</td><td>STNK-7788</td><td><span class="badge badge-success">Disimpan</span></td></tr><tr><td>Emas</td><td>Emas 20 gram</td><td>$1,250</td><td>Baik</td><td>-</td><td><span class="badge badge-info">Ditebus</span></td></tr><tr><td>Mobil</td><td>Toyota Hilux</td><td>$4,500</td><td>Baik</td><td>BPKB-4501</td><td><span class="badge badge-warning">Proses Lelang</span></td></tr></tbody></table></div></div></section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Buat Pinjaman Baru</h3>
+          <p style="color:#64748b; font-size:13px; margin-top:4px;">Input data klien, pinjaman, dan jaminan dari Dashboard.</p>
+        </div>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="line-height:1.7; color:#475569; margin-bottom:18px;">
+          Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.
+        </p>
+        <a class="btn btn-primary" href="index.html">Buka Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Data berhasil disimpan.</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

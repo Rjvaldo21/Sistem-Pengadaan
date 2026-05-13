@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIREI CHIBA PE&Ntilde;OR - Kontrak</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo"><img src="assets/logo.png" alt="HIREI CHIBA PE&Ntilde;OR logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><span class="brand-logo-fallback">HC</span></div>
+        <div>
+          <h1>HIREI CHIBA PE&Ntilde;OR</h1>
+          <span>Pawn & Loan Management</span>
+        </div>
+      </div>
+
+      <div class="menu-label">Operasional</div>
+      <a class="nav-item" href="index.html">Dashboard</a>
+      <a class="nav-item" href="klien.html">Klien</a>
+      <a class="nav-item" href="pinjaman.html">Pinjaman</a>
+      <a class="nav-item" href="jaminan.html">Jaminan</a>
+      <a class="nav-item" href="pembayaran.html">Pembayaran</a>
+      <a class="nav-item" href="jatuh-tempo.html">Jatuh Tempo</a>
+      <a class="nav-item" href="lelang.html">Lelang</a>
+
+      <div class="menu-label">Keuangan</div>
+      <a class="nav-item" href="kas-masuk.html">Kas Masuk</a>
+      <a class="nav-item" href="kas-keluar.html">Kas Keluar</a>
+      <a class="nav-item" href="laporan-keuangan.html">Laporan Keuangan</a>
+
+      <div class="menu-label">Dokumen & Sistem</div>
+      <a class="nav-item active" href="kontrak.html">Kontrak</a>
+      <a class="nav-item" href="user-role.html">User & Role</a>
+      <a class="nav-item" href="pengaturan.html">Pengaturan</a>
+
+      <div class="menu-label">Akun</div>
+      <a class="nav-item nav-logout" href="login.html" onclick="logout(event)">Logout</a>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
+          <div class="topbar-left">
+            <h2>Kontrak</h2>
+            <p>Dokumen perjanjian pinjaman dan serah terima jaminan.</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="search-box">
+            <span>&#128269;</span>
+            <input type="text" id="searchInput" placeholder="Cari klien, pinjaman, jaminan..." onkeyup="searchTable()" />
+          </div>
+          <button class="btn btn-primary" onclick="openContractForm()">+ Buat Kontrak</button>
+        </div>
+      </div>
+
+<section class="page-stack"><div class="panel"><div class="panel-header"><div><h3>Kontrak Pinjaman</h3><p>Dokumen perjanjian pinjaman dengan jaminan.</p></div><button class="btn btn-primary" onclick="openContractForm()">+ Buat Kontrak</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>No. Kontrak</th><th>Kode Pinjaman</th><th>Nama Klien</th><th>Tanggal</th><th>Durasi</th><th>Status</th></tr></thead><tbody><tr><td>KT-2026-001</td><td>PN-2026-001</td><td>Jo&atilde;o Pereira</td><td>13 Mei 2026</td><td>3 bulan</td><td><span class="badge badge-success">Ditandatangani</span></td></tr><tr><td>KT-2026-004</td><td>PN-2026-004</td><td>Ana Martins</td><td>10 Mei 2026</td><td>3 bulan</td><td><span class="badge badge-warning">Draft</span></td></tr></tbody></table></div></div></section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Buat Pinjaman Baru</h3>
+          <p style="color:#64748b; font-size:13px; margin-top:4px;">Input data klien, pinjaman, dan jaminan dari Dashboard.</p>
+        </div>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="line-height:1.7; color:#475569; margin-bottom:18px;">
+          Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.
+        </p>
+        <a class="btn btn-primary" href="index.html">Buka Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Data berhasil disimpan.</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIREI CHIBA PE&Ntilde;OR - Pengaturan</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo"><img src="assets/logo.png" alt="HIREI CHIBA PE&Ntilde;OR logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><span class="brand-logo-fallback">HC</span></div>
+        <div>
+          <h1>HIREI CHIBA PE&Ntilde;OR</h1>
+          <span>Pawn & Loan Management</span>
+        </div>
+      </div>
+
+      <div class="menu-label">Operasional</div>
+      <a class="nav-item" href="index.html">Dashboard</a>
+      <a class="nav-item" href="klien.html">Klien</a>
+      <a class="nav-item" href="pinjaman.html">Pinjaman</a>
+      <a class="nav-item" href="jaminan.html">Jaminan</a>
+      <a class="nav-item" href="pembayaran.html">Pembayaran</a>
+      <a class="nav-item" href="jatuh-tempo.html">Jatuh Tempo</a>
+      <a class="nav-item" href="lelang.html">Lelang</a>
+
+      <div class="menu-label">Keuangan</div>
+      <a class="nav-item" href="kas-masuk.html">Kas Masuk</a>
+      <a class="nav-item" href="kas-keluar.html">Kas Keluar</a>
+      <a class="nav-item" href="laporan-keuangan.html">Laporan Keuangan</a>
+
+      <div class="menu-label">Dokumen & Sistem</div>
+      <a class="nav-item" href="kontrak.html">Kontrak</a>
+      <a class="nav-item" href="user-role.html">User & Role</a>
+      <a class="nav-item active" href="pengaturan.html">Pengaturan</a>
+
+      <div class="menu-label">Akun</div>
+      <a class="nav-item nav-logout" href="login.html" onclick="logout(event)">Logout</a>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
+          <div class="topbar-left">
+            <h2>Pengaturan</h2>
+            <p>Atur profil perusahaan, paket pinjaman, dan aturan margin.</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="search-box">
+            <span>&#128269;</span>
+            <input type="text" id="searchInput" placeholder="Cari klien, pinjaman, jaminan..." onkeyup="searchTable()" />
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">Simpan</button>
+        </div>
+      </div>
+
+      <section class="page-stack">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Pengaturan Sistem</h3>
+              <p>Profil perusahaan, paket pinjaman, margin, dan aturan jatuh tempo.</p>
+            </div>
+          </div>
+          <div class="form-panel">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nama Usaha</label>
+                <input type="text" id="businessName" value="HIREI CHIBA PE&Ntilde;OR, LDA" />
+              </div>
+              <div class="form-group">
+                <label>Modal Awal</label>
+                <input type="number" id="initialCapital" value="50000" min="0" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Durasi Default</label>
+                <select id="defaultDuration">
+                  <option value="3">3 bulan</option>
+                  <option value="6">6 bulan</option>
+                  <option value="12">12 bulan</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Margin Default (%)</label>
+                <input type="number" id="defaultMargin" value="15" min="0" step="0.1" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Alamat</label>
+              <input type="text" id="businessAddress" value="Bairo Pite Hudi Laran / Dom Aleixo, Dili, Timor-Leste" />
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">Simpan Pengaturan</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Paket Pinjaman</h3>
+              <p>Master data paket pinjaman yang bisa diedit sesuai kebijakan bisnis.</p>
+            </div>
+            <button class="btn btn-primary" onclick="addLoanPackage()">+ Tambah Paket</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table settings-table">
+              <thead>
+                <tr>
+                  <th>Paket</th>
+                  <th>Nilai Pinjaman</th>
+                  <th>Pembayaran per Bulan</th>
+                  <th>Durasi</th>
+                  <th>Margin</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="loanPackageTable">
+                <tr>
+                  <td><input type="text" value="Paket 1" /></td>
+                  <td><input type="text" value="$500" /></td>
+                  <td><input type="text" value="$200" /></td>
+                  <td><input type="text" value="3 bulan" /></td>
+                  <td><input type="text" value="15%" /></td>
+                  <td><button class="btn btn-danger" onclick="removeLoanPackage(this)">Hapus</button></td>
+                </tr>
+                <tr>
+                  <td><input type="text" value="Paket 2" /></td>
+                  <td><input type="text" value="$1,000" /></td>
+                  <td><input type="text" value="$350" /></td>
+                  <td><input type="text" value="3 bulan" /></td>
+                  <td><input type="text" value="14%" /></td>
+                  <td><button class="btn btn-danger" onclick="removeLoanPackage(this)">Hapus</button></td>
+                </tr>
+                <tr>
+                  <td><input type="text" value="Paket 3" /></td>
+                  <td><input type="text" value="$1,500" /></td>
+                  <td><input type="text" value="$550" /></td>
+                  <td><input type="text" value="3 bulan" /></td>
+                  <td><input type="text" value="13%" /></td>
+                  <td><button class="btn btn-danger" onclick="removeLoanPackage(this)">Hapus</button></td>
+                </tr>
+                <tr>
+                  <td><input type="text" value="Paket 4" /></td>
+                  <td><input type="text" value="$2,000" /></td>
+                  <td><input type="text" value="$750" /></td>
+                  <td><input type="text" value="3 bulan" /></td>
+                  <td><input type="text" value="12.5%" /></td>
+                  <td><button class="btn btn-danger" onclick="removeLoanPackage(this)">Hapus</button></td>
+                </tr>
+                <tr>
+                  <td><input type="text" value="Paket 5" /></td>
+                  <td><input type="text" value="$5,000 ke atas" /></td>
+                  <td><input type="text" value="$1,000" /></td>
+                  <td><input type="text" value="3 bulan" /></td>
+                  <td><input type="text" value="10%" /></td>
+                  <td><button class="btn btn-danger" onclick="removeLoanPackage(this)">Hapus</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-panel">
+            <button class="btn btn-primary" onclick="saveLoanPackages()">Simpan Paket Pinjaman</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Buat Pinjaman Baru</h3>
+          <p style="color:#64748b; font-size:13px; margin-top:4px;">Input data klien, pinjaman, dan jaminan dari Dashboard.</p>
+        </div>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="line-height:1.7; color:#475569; margin-bottom:18px;">
+          Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.
+        </p>
+        <a class="btn btn-primary" href="index.html">Buka Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Data berhasil disimpan.</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
