@@ -990,7 +990,7 @@ function openClientForm() {
           <select id="clientFormIdentityType">
             <option>BI</option>
             <option>Passport</option>
-            <option>KTP</option>
+            <option>ELEITORAL</option>
             <option>Dokumen Lain</option>
           </select>
         </div>
