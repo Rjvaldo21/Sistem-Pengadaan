@@ -66,7 +66,7 @@
         <div class="stat-card"><div class="stat-icon">KS</div><h3>$50,000</h3><p>Modal Awal</p></div>
       </section>
 
-      <section class="content-grid">
+      <section class="page-stack">
         <div class="panel">
           <div class="panel-header">
             <div><h3>Daftar Pinjaman Terbaru</h3><p>Monitoring pinjaman, jaminan, jatuh tempo, dan status pembayaran.</p></div>
@@ -83,75 +83,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header"><div><h3>Form Pinjaman / Penhoria</h3><p>Input data klien, pinjaman, dan jaminan.</p></div></div>
-          <form class="form-panel" id="loanForm" onsubmit="submitLoan(event)">
-            <div class="form-row">
-              <div class="form-group"><label>Nama Klien</label><input type="text" id="clientName" placeholder="Nama lengkap klien" required /></div>
-              <div class="form-group"><label>Nomor Kontak</label><input type="text" id="contact" placeholder="Nomor telepon" required /></div>
-            </div>
-            <div class="form-group"><label>Alamat</label><input type="text" id="address" placeholder="Alamat klien" /></div>
-            <div class="form-row">
-              <div class="form-group"><label>Jenis Identitas</label><select id="identityType"><option>BI</option><option>Passport</option><option>ELEITORAL</option><option>Dokumen Lain</option></select></div>
-              <div class="form-group"><label>No. Kartu Identitas</label><input type="text" id="idNumber" placeholder="BI/Passport/ID" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Tanggal Lahir</label><input type="date" id="birthDate" /></div>
-              <div class="form-group"><label>Gender</label><select id="gender"><option>Pria</option><option>Wanita</option></select></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Status Pekerjaan</label><select id="jobStatus"><option>Karyawan</option><option>Wirausaha</option><option>Petani</option><option>Belum bekerja</option></select></div>
-              <div class="form-group"><label>Kontak Darurat</label><input type="text" id="emergencyContact" placeholder="Nama / nomor keluarga" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Kode Pinjaman</label><input type="text" id="loanCode" value="PN-2026-005" required /></div>
-              <div class="form-group"><label>Tanggal Pinjam</label><input type="date" id="loanDate" required /></div>
-            </div>
-            <div class="form-group">
-              <label>Paket Pinjaman</label>
-              <select id="loanPackage" onchange="applyLoanPackage()">
-                <option value="">Pilih paket pinjaman</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Jumlah Pinjaman</label><input type="number" id="loanAmount" value="0" min="0" oninput="calculateLoan()" required /></div>
-              <div class="form-group"><label>Margin / Bunga (%)</label><input type="number" id="margin" value="15" min="0" step="0.1" oninput="calculateLoan()" required /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Durasi</label><select id="duration" onchange="calculateLoan()"><option value="3">3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div>
-              <div class="form-group"><label>Tanggal Jatuh Tempo</label><input type="date" id="dueDate" required /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Metode Pencairan</label><select id="disbursementMethod"><option>Tunai</option><option>Transfer Bank</option><option>Mobile Banking</option></select></div>
-              <div class="form-group"><label>Status Pencairan</label><select id="disbursementStatus"><option>Proses</option><option>Dicairkan</option><option>Ditahan</option></select></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Denda Keterlambatan (%)</label><input type="number" id="penaltyRate" value="0" min="0" step="0.1" /></div>
-              <div class="form-group"><label>Petugas</label><input type="text" id="createdBy" placeholder="Nama staff" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Jenis Jaminan</label><select id="collateralType"><option>Emas</option><option>Motor</option><option>Mobil</option><option>Laptop</option><option>Telepon</option><option>Rumah</option><option>Tanah</option><option>Dokumen Kendaraan</option></select></div>
-              <div class="form-group"><label>Nama Barang</label><input type="text" id="collateralName" placeholder="Contoh: Yamaha NMAX, Emas 20 gram" required /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Nilai Taksiran</label><input type="number" id="appraisalValue" value="0" min="0" /></div>
-              <div class="form-group"><label>Kondisi Barang</label><select id="condition"><option>Baik</option><option>Rusak ringan</option><option>Rusak berat</option></select></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Nomor Dokumen</label><input type="text" id="documentNumber" placeholder="Nomor STNK/BPKB/sertifikat jika ada" /></div>
-              <div class="form-group"><label>Lokasi Penyimpanan</label><input type="text" id="storageLocation" value="Brankas Utama" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Penaksir</label><input type="text" id="appraiser" placeholder="Nama penaksir" /></div>
-              <div class="form-group"><label>Tanggal Taksir</label><input type="date" id="appraisalDate" /></div>
-            </div>
-            <div class="form-group"><label>Referensi Foto Jaminan</label><input type="text" id="collateralPhoto" placeholder="Nama file / URL foto barang" /></div>
-            <div class="total-grid"><div class="total-box"><span>Total Harus Dibayar</span><strong id="totalPayable">$0.00</strong></div><div class="total-box"><span>Cicilan per Bulan</span><strong id="monthlyPayment">$0.00</strong></div></div>
-            <div class="form-group"><label>Catatan</label><textarea id="note" placeholder="Catatan taksiran, risiko, atau kondisi jaminan..."></textarea></div>
-            <div class="action-buttons"><button type="reset" class="btn btn-light" onclick="resetLoanForm()">Reset</button><button type="submit" class="btn btn-primary">Simpan Pinjaman</button></div>
-          </form>
         </div>
       </section>
     </main>

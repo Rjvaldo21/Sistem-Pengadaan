@@ -19,6 +19,7 @@ const languageNames = {
 const originalTextValues = new WeakMap();
 const originalPlaceholderValues = new WeakMap();
 const originalOptionLabels = new WeakMap();
+const originalDocumentTitle = document.title;
 
 const i18n = {
   en: {
@@ -56,6 +57,9 @@ const i18n = {
     'Konfigurasi profil usaha, modal, dan paket pinjaman.': 'Configure business profile, capital, and loan packages.',
     'Cari klien, pinjaman, jaminan...': 'Search clients, loans, collateral...',
     '+ Pinjaman Baru': '+ New Loan',
+    'Pinjaman Baru': 'New Loan',
+    'Daftar Pinjaman': 'Loan List',
+    'Input data klien, pinjaman, dan jaminan dalam satu alur kerja.': 'Enter client, loan, and collateral data in one workflow.',
     '+ Tambah Klien': '+ Add Client',
     '+ Tambah Jaminan': '+ Add Collateral',
     '+ Catat Pembayaran': '+ Record Payment',
@@ -280,6 +284,9 @@ const i18n = {
     'Konfigurasi profil usaha, modal, dan paket pinjaman.': '配置企业资料、资本和贷款套餐。',
     'Cari klien, pinjaman, jaminan...': '搜索客户、贷款、抵押品...',
     '+ Pinjaman Baru': '+ 新贷款',
+    'Pinjaman Baru': '新贷款',
+    'Daftar Pinjaman': '贷款列表',
+    'Input data klien, pinjaman, dan jaminan dalam satu alur kerja.': '在一个流程中输入客户、贷款和抵押品资料。',
     '+ Tambah Klien': '+ 添加客户',
     '+ Tambah Jaminan': '+ 添加抵押品',
     '+ Catat Pembayaran': '+ 记录还款',
@@ -471,6 +478,270 @@ const i18n = {
   }
 };
 
+const extraTranslations = {
+  en: {
+    'Buat Pinjaman Baru': 'Create New Loan',
+    'Input data klien, pinjaman, dan jaminan dari Dashboard.': 'Enter client, loan, and collateral data from the Dashboard.',
+    'Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.': 'Use the Loan / Pawn form to record the loan contract, margin, due date, and collateral item.',
+    'Daftar kontrak pinjaman aktif dan historinya.': 'List of active loan contracts and their history.',
+    'Catat cicilan, bunga, dan pelunasan pinjaman.': 'Record installments, interest, and loan settlements.',
+    'Pantau pinjaman yang segera jatuh tempo atau terlambat.': 'Monitor loans that are nearly due or overdue.',
+    'Kelola jaminan yang masuk proses lelang karena pinjaman macet.': 'Manage collateral entering auction because of defaulted loans.',
+    'Pemasukan dari cicilan, pelunasan, margin, dan biaya admin.': 'Income from installments, settlements, margins, and admin fees.',
+    'Pemasukan dari cicilan, pelunasan, margin, dan biaya administrasi.': 'Income from installments, settlements, margins, and administration fees.',
+    'Dana pencairan pinjaman dan biaya operasional perusahaan.': 'Loan disbursement funds and company operating expenses.',
+    'Dana yang dicairkan kepada klien dan biaya operasional kantor.': 'Funds disbursed to clients and office operating expenses.',
+    'Ringkasan modal, arus kas, pinjaman, margin, dan jaminan.': 'Summary of capital, cash flow, loans, margin, and collateral.',
+    'Dokumen perjanjian pinjaman dan serah terima jaminan.': 'Loan agreement and collateral handover documents.',
+    'Kelola akses staff berdasarkan fungsi organisasi perusahaan.': 'Manage staff access based on company organizational functions.',
+    'Profil perusahaan, paket pinjaman, margin, dan aturan jatuh tempo.': 'Company profile, loan packages, margin, and due-date rules.',
+    'Atur profil perusahaan, paket pinjaman, dan aturan margin.': 'Configure company profile, loan packages, and margin rules.',
+    'Master data paket pinjaman yang bisa diedit sesuai kebijakan bisnis.': 'Loan package master data that can be edited according to business policy.',
+    'Kelola barang dan dokumen aset yang dijadikan jaminan.': 'Manage goods and asset documents used as collateral.',
+    'Jaminan dari pinjaman macet yang siap dijual.': 'Collateral from defaulted loans ready for sale.',
+    'Kontrak Pinjaman': 'Loan Contract',
+    'Metode Cair': 'Disbursement Method',
+    'Total Bayar': 'Total Payable',
+    'Cicilan Bulanan': 'Monthly Installment',
+    'Potensi margin dari pinjaman': 'Potential margin from loans',
+    'Total pemasukan tercatat': 'Total recorded income',
+    'Total pencairan dan operasional': 'Total disbursement and operations',
+    'Total pembayaran, pelunasan, margin, dan pendapatan lain.': 'Total payments, settlements, margins, and other income.',
+    'Total pencairan pinjaman dan biaya operasional.': 'Total loan disbursements and operating expenses.',
+    'Potensi margin dari seluruh pinjaman tercatat.': 'Potential margin from all recorded loans.',
+    'Kontrak yang masih berjalan atau dalam proses.': 'Contracts that are active or still in process.',
+    'Data berhasil disimpan.': 'Data saved successfully.',
+    'Data Berhasil Disimpan': 'Data Saved Successfully',
+    'Pilih aksi lanjutan untuk arsip atau kirim ke klien.': 'Choose the next action for archiving or sending to the client.',
+    'Ringkasan Data': 'Data Summary',
+    'Belum ada data untuk dikirim.': 'No data is available to send.',
+    'Browser memblokir popup print.': 'The browser blocked the print popup.',
+    'Isi email atau username terlebih dahulu.': 'Enter an email or username first.',
+    'Login berhasil.': 'Login successful.',
+    'Modal belum tersedia di halaman ini.': 'The modal is not available on this page.',
+    'Lengkapi data klien, jaminan, dan jumlah pinjaman lebih dari $0.': 'Complete the client data, collateral, and loan amount above $0.',
+    'Belum ada tabel untuk diexport di halaman ini.': 'There is no table to export on this page.',
+    'Data berhasil diexport ke CSV.': 'Data exported to CSV successfully.',
+    'Minimal harus ada 1 paket pinjaman.': 'At least 1 loan package is required.',
+    'Isi minimal 1 paket pinjaman.': 'Enter at least 1 loan package.',
+    'Paket pinjaman disimpan.': 'Loan packages saved.',
+    'Pengaturan disimpan.': 'Settings saved.',
+    'Tambah Klien': 'Add Client',
+    'Input data klien baru untuk penhoria.': 'Enter a new pawn client record.',
+    'Simpan Klien': 'Save Client',
+    'Tambah Jaminan': 'Add Collateral',
+    'Catat barang atau dokumen aset yang menjadi jaminan.': 'Record goods or asset documents used as collateral.',
+    'Simpan Jaminan': 'Save Collateral',
+    'Catat Pembayaran': 'Record Payment',
+    'Input cicilan, margin, atau pelunasan klien.': 'Enter a client installment, margin payment, or settlement.',
+    'Simpan Pembayaran': 'Save Payment',
+    'Proses Lelang': 'Process Auction',
+    'Catat jaminan dari pinjaman macet yang akan dilelang.': 'Record collateral from a defaulted loan to be auctioned.',
+    'Simpan Lelang': 'Save Auction',
+    'Catat Kas Masuk': 'Record Cash In',
+    'Input pemasukan dari pembayaran, margin, atau biaya administrasi.': 'Enter income from payments, margins, or administration fees.',
+    'Simpan Kas Masuk': 'Save Cash In',
+    'Catat Kas Keluar': 'Record Cash Out',
+    'Input pencairan dana atau biaya operasional.': 'Enter fund disbursement or operating expenses.',
+    'Simpan Kas Keluar': 'Save Cash Out',
+    'Buat Kontrak': 'Create Contract',
+    'Buat data kontrak pinjaman dengan jaminan.': 'Create a secured loan contract record.',
+    'Simpan Kontrak': 'Save Contract',
+    'Tambah User': 'Add User',
+    'Input user staff dan role akses sistem.': 'Enter staff user and system access role.',
+    'Simpan User': 'Save User',
+    'No. Identitas': 'Identity No.',
+    'Pekerjaan': 'Occupation',
+    'Kondisi': 'Condition',
+    'Referensi Foto': 'Photo Reference',
+    'Jenis Pembayaran': 'Payment Type',
+    'Metode Bayar': 'Payment Method',
+    'Angsuran Ke': 'Installment No.',
+    'Sisa Saldo Setelah Bayar': 'Remaining Balance After Payment',
+    'Tanggal Lelang': 'Auction Date',
+    'Metode Kas': 'Cash Method',
+    'Lampiran / Bukti': 'Attachment / Proof',
+    'Lampiran': 'Attachment',
+    'File Kontrak': 'Contract File',
+    'Tanggal Kontrak': 'Contract Date',
+    'Margin (%)': 'Margin (%)',
+    'Nama saksi / staff': 'Witness / staff name',
+    'Nomor file, nama file, atau URL': 'File number, file name, or URL',
+    'Nomor bukti, nama file, atau URL': 'Proof number, file name, or URL',
+    'STNK/BPKB/Sertifikat atau -': 'STNK/BPKB/certificate or -',
+    'Karyawan, wirausaha, petani...': 'Employee, entrepreneur, farmer...',
+    'Contoh: Pinjaman, Kas, Laporan': 'Example: Loans, Cash, Reports',
+    'Paket baru': 'New package',
+    'Hapus': 'Delete',
+    'Pilih pinjaman': 'Select loan',
+    'Dokumen Lain': 'Other Document',
+    'Verifikasi': 'Verification',
+    'Blacklist': 'Blacklist',
+    'Dilelang': 'Auctioned',
+    'Pembayaran': 'Payment',
+    'Pembayaran -': 'Payment -',
+    'Catatan Pembayaran': 'Payment Record',
+    'Catatan Kas Masuk': 'Cash In Record',
+    'Catatan Kas Keluar': 'Cash Out Record',
+    'Data User': 'User Data',
+    'Pinjaman / Penhoria': 'Loan / Pawn',
+    'Detail Pinjaman / Penhoria': 'Loan / Pawn Detail',
+    'Denda Keterlambatan': 'Late Penalty',
+    'Nonaktif': 'Inactive',
+    'Semua modul': 'All modules',
+    'Pinjaman, Kas, Laporan': 'Loans, Cash, Reports',
+    'Administrasi & Finance': 'Administration & Finance',
+    'Direktur': 'Director',
+    'Finance Staff': 'Finance Staff',
+    'Treasury': 'Treasury',
+    'Accounting': 'Accounting',
+    'IT': 'IT',
+    'Receptionist': 'Receptionist',
+    'BI': 'BI',
+    'Eleitoral': 'Eleitoral',
+    'Passport': 'Passport',
+    'POS': 'POS',
+    'Segera Jatuh Tempo': 'Due Soon',
+    'Biaya administrasi kantor': 'Office administration fee',
+    '3 bulan': '3 months',
+    '6 bulan': '6 months',
+    '12 bulan': '12 months',
+    '$5,000 ke atas': '$5,000 and above'
+  },
+  zh: {
+    'Buat Pinjaman Baru': '创建新贷款',
+    'Input data klien, pinjaman, dan jaminan dari Dashboard.': '从仪表盘输入客户、贷款和抵押品资料。',
+    'Gunakan form Pinjaman / Penhoria untuk mencatat kontrak pinjaman, margin, tanggal jatuh tempo, dan barang jaminan.': '使用贷款/典当表单记录贷款合同、利率、到期日和抵押品。',
+    'Daftar kontrak pinjaman aktif dan historinya.': '有效贷款合同及历史记录列表。',
+    'Catat cicilan, bunga, dan pelunasan pinjaman.': '记录贷款分期、利息和结清。',
+    'Pantau pinjaman yang segera jatuh tempo atau terlambat.': '监控即将到期或已逾期的贷款。',
+    'Kelola jaminan yang masuk proses lelang karena pinjaman macet.': '管理因坏账进入拍卖流程的抵押品。',
+    'Pemasukan dari cicilan, pelunasan, margin, dan biaya admin.': '来自分期、结清、利率和管理费的收入。',
+    'Pemasukan dari cicilan, pelunasan, margin, dan biaya administrasi.': '来自分期、结清、利率和管理费的收入。',
+    'Dana pencairan pinjaman dan biaya operasional perusahaan.': '贷款放款资金和公司运营费用。',
+    'Dana yang dicairkan kepada klien dan biaya operasional kantor.': '发放给客户的资金和办公室运营费用。',
+    'Ringkasan modal, arus kas, pinjaman, margin, dan jaminan.': '资本、现金流、贷款、利率和抵押品概览。',
+    'Dokumen perjanjian pinjaman dan serah terima jaminan.': '贷款协议和抵押品交接文件。',
+    'Kelola akses staff berdasarkan fungsi organisasi perusahaan.': '根据公司组织职能管理员工访问权限。',
+    'Profil perusahaan, paket pinjaman, margin, dan aturan jatuh tempo.': '公司资料、贷款套餐、利率和到期规则。',
+    'Atur profil perusahaan, paket pinjaman, dan aturan margin.': '配置公司资料、贷款套餐和利率规则。',
+    'Master data paket pinjaman yang bisa diedit sesuai kebijakan bisnis.': '可按业务政策编辑的贷款套餐主数据。',
+    'Kelola barang dan dokumen aset yang dijadikan jaminan.': '管理作为抵押品的物品和资产文件。',
+    'Jaminan dari pinjaman macet yang siap dijual.': '准备出售的坏账贷款抵押品。',
+    'Kontrak Pinjaman': '贷款合同',
+    'Metode Cair': '放款方式',
+    'Total Bayar': '应还总额',
+    'Cicilan Bulanan': '每月分期',
+    'Potensi margin dari pinjaman': '贷款潜在收益',
+    'Total pemasukan tercatat': '已记录总收入',
+    'Total pencairan dan operasional': '放款和运营总额',
+    'Total pembayaran, pelunasan, margin, dan pendapatan lain.': '还款、结清、利率收益和其他收入总计。',
+    'Total pencairan pinjaman dan biaya operasional.': '贷款放款和运营费用总计。',
+    'Potensi margin dari seluruh pinjaman tercatat.': '所有已记录贷款的潜在收益。',
+    'Kontrak yang masih berjalan atau dalam proses.': '仍在执行或处理中 的合同。',
+    'Data berhasil disimpan.': '数据保存成功。',
+    'Data Berhasil Disimpan': '数据保存成功',
+    'Pilih aksi lanjutan untuk arsip atau kirim ke klien.': '选择下一步操作：归档或发送给客户。',
+    'Ringkasan Data': '数据摘要',
+    'Belum ada data untuk dikirim.': '没有可发送的数据。',
+    'Browser memblokir popup print.': '浏览器阻止了打印弹窗。',
+    'Isi email atau username terlebih dahulu.': '请先输入邮箱或用户名。',
+    'Login berhasil.': '登录成功。',
+    'Modal belum tersedia di halaman ini.': '此页面没有可用的弹窗。',
+    'Lengkapi data klien, jaminan, dan jumlah pinjaman lebih dari $0.': '请完整填写客户、抵押品资料，并确保贷款金额大于 $0。',
+    'Belum ada tabel untuk diexport di halaman ini.': '此页面没有可导出的表格。',
+    'Data berhasil diexport ke CSV.': '数据已成功导出为 CSV。',
+    'Minimal harus ada 1 paket pinjaman.': '至少需要 1 个贷款套餐。',
+    'Isi minimal 1 paket pinjaman.': '请至少填写 1 个贷款套餐。',
+    'Paket pinjaman disimpan.': '贷款套餐已保存。',
+    'Pengaturan disimpan.': '设置已保存。',
+    'Tambah Klien': '添加客户',
+    'Input data klien baru untuk penhoria.': '输入新的典当客户资料。',
+    'Simpan Klien': '保存客户',
+    'Tambah Jaminan': '添加抵押品',
+    'Catat barang atau dokumen aset yang menjadi jaminan.': '记录作为抵押品的物品或资产文件。',
+    'Simpan Jaminan': '保存抵押品',
+    'Catat Pembayaran': '记录还款',
+    'Input cicilan, margin, atau pelunasan klien.': '输入客户分期、利率付款或结清。',
+    'Simpan Pembayaran': '保存还款',
+    'Proses Lelang': '处理拍卖',
+    'Catat jaminan dari pinjaman macet yang akan dilelang.': '记录将要拍卖的坏账贷款抵押品。',
+    'Simpan Lelang': '保存拍卖',
+    'Catat Kas Masuk': '记录现金收入',
+    'Input pemasukan dari pembayaran, margin, atau biaya administrasi.': '输入来自还款、利率或管理费的收入。',
+    'Simpan Kas Masuk': '保存现金收入',
+    'Catat Kas Keluar': '记录现金支出',
+    'Input pencairan dana atau biaya operasional.': '输入放款或运营费用。',
+    'Simpan Kas Keluar': '保存现金支出',
+    'Buat Kontrak': '创建合同',
+    'Buat data kontrak pinjaman dengan jaminan.': '创建有抵押贷款合同记录。',
+    'Simpan Kontrak': '保存合同',
+    'Tambah User': '添加用户',
+    'Input user staff dan role akses sistem.': '输入员工用户和系统访问角色。',
+    'Simpan User': '保存用户',
+    'No. Identitas': '证件号',
+    'Pekerjaan': '职业',
+    'Kondisi': '状态',
+    'Referensi Foto': '照片参考',
+    'Jenis Pembayaran': '付款类型',
+    'Metode Bayar': '付款方式',
+    'Angsuran Ke': '第几期',
+    'Sisa Saldo Setelah Bayar': '付款后剩余余额',
+    'Tanggal Lelang': '拍卖日期',
+    'Metode Kas': '现金方式',
+    'Lampiran / Bukti': '附件/凭证',
+    'Lampiran': '附件',
+    'File Kontrak': '合同文件',
+    'Tanggal Kontrak': '合同日期',
+    'Margin (%)': '利率 (%)',
+    'Nama saksi / staff': '见证人/员工姓名',
+    'Nomor file, nama file, atau URL': '文件编号、文件名或 URL',
+    'Nomor bukti, nama file, atau URL': '凭证编号、文件名或 URL',
+    'STNK/BPKB/Sertifikat atau -': '车辆/产权证书编号或 -',
+    'Karyawan, wirausaha, petani...': '员工、个体经营者、农民...',
+    'Contoh: Pinjaman, Kas, Laporan': '示例：贷款、现金、报表',
+    'Paket baru': '新套餐',
+    'Hapus': '删除',
+    'Pilih pinjaman': '选择贷款',
+    'Dokumen Lain': '其他文件',
+    'Verifikasi': '核验',
+    'Blacklist': '黑名单',
+    'Dilelang': '已拍卖',
+    'Pembayaran': '还款',
+    'Pembayaran -': '还款 -',
+    'Catatan Pembayaran': '还款记录',
+    'Catatan Kas Masuk': '现金收入记录',
+    'Catatan Kas Keluar': '现金支出记录',
+    'Data User': '用户资料',
+    'Pinjaman / Penhoria': '贷款/典当',
+    'Detail Pinjaman / Penhoria': '贷款/典当详情',
+    'Denda Keterlambatan': '逾期罚金',
+    'Nonaktif': '停用',
+    'Semua modul': '所有模块',
+    'Pinjaman, Kas, Laporan': '贷款、现金、报表',
+    'Administrasi & Finance': '行政与财务',
+    'Direktur': '董事',
+    'Finance Staff': '财务员工',
+    'Treasury': '出纳',
+    'Accounting': '会计',
+    'IT': 'IT',
+    'Receptionist': '前台',
+    'BI': 'BI',
+    'Eleitoral': 'Eleitoral',
+    'Passport': '护照',
+    'POS': 'POS',
+    'Segera Jatuh Tempo': '即将到期',
+    'Biaya administrasi kantor': '办公室行政费用',
+    '3 bulan': '3个月',
+    '6 bulan': '6个月',
+    '12 bulan': '12个月',
+    '$5,000 ke atas': '$5,000 以上'
+  }
+};
+
+Object.assign(i18n.en, extraTranslations.en);
+Object.assign(i18n.zh, extraTranslations.zh);
+
 if (!isLoginPage && !currentUser) {
   window.location.href = 'login.html';
 }
@@ -532,7 +803,7 @@ function openModal() {
     return;
   }
 
-  window.location.href = 'index.html#loanForm';
+  window.location.href = 'pinjaman-baru.html';
 }
 
 function closeModal() {
@@ -1340,8 +1611,8 @@ function modalActions(primaryLabel) {
 function buildRecordSummary(title, fields) {
   const lines = fields
     .filter(item => item.value !== undefined && item.value !== null && item.value !== '')
-    .map(item => `${item.label}: ${item.value}`);
-  return `${title}\n${lines.join('\n')}`;
+    .map(item => `${translateText(item.label)}: ${translateText(item.value)}`);
+  return `${translateText(title)}\n${lines.join('\n')}`;
 }
 
 function showShareOptions(title, summary, phone = '') {
@@ -1452,7 +1723,7 @@ function openClientForm() {
           <select id="clientFormIdentityType">
             <option>BI</option>
             <option>Passport</option>
-            <option>ELEITORAL</option>
+            <option>Eleitoral</option>
             <option>Dokumen Lain</option>
           </select>
         </div>
@@ -2567,7 +2838,42 @@ function translateText(text) {
   const language = getLanguage();
   const cleanText = String(text || '').trim();
   if (language === 'id' || !cleanText) return text;
-  return i18n[language]?.[cleanText] || text;
+  const exact = i18n[language]?.[cleanText];
+  if (exact) return exact;
+
+  const packageMatch = cleanText.match(/^Paket\s+(\d+)$/i);
+  if (packageMatch) return language === 'zh' ? `套餐 ${packageMatch[1]}` : `Package ${packageMatch[1]}`;
+
+  const monthsMatch = cleanText.match(/^(\d+)\s+bulan$/i);
+  if (monthsMatch) return language === 'zh' ? `${monthsMatch[1]}个月` : `${monthsMatch[1]} months`;
+
+  const loanDisbursementMatch = cleanText.match(/^Pencairan pinjaman\s+(.+)$/i);
+  if (loanDisbursementMatch) {
+    return language === 'zh'
+      ? `贷款放款 ${loanDisbursementMatch[1]}`
+      : `Loan disbursement ${loanDisbursementMatch[1]}`;
+  }
+
+  const notFoundMatch = cleanText.match(/^Data\s+(.+)\s+tidak ditemukan\.$/i);
+  if (notFoundMatch) {
+    return language === 'zh'
+      ? `未找到数据 ${notFoundMatch[1]}。`
+      : `Data ${notFoundMatch[1]} was not found.`;
+  }
+
+  const dynamicPrefixMatch = cleanText.match(/^(Data Klien|Data Jaminan|Pembayaran|Lelang|Kas Masuk|Kas Keluar|Kontrak|User|Pinjaman|Detail Pinjaman)\s+-\s+(.+)$/);
+  if (dynamicPrefixMatch) {
+    return `${translateText(dynamicPrefixMatch[1])} - ${dynamicPrefixMatch[2]}`;
+  }
+
+  if (cleanText.includes(' - ')) {
+    const translatedParts = cleanText.split(' - ').map(part => translateText(part));
+    if (translatedParts.some((part, index) => part !== cleanText.split(' - ')[index])) {
+      return translatedParts.join(' - ');
+    }
+  }
+
+  return text;
 }
 
 function preserveSpacing(original, translated) {
@@ -2649,9 +2955,17 @@ function translateTextNodes() {
 function applyLanguage() {
   const language = getLanguage();
   document.documentElement.lang = language === 'zh' ? 'zh-CN' : language;
+  const titleParts = originalDocumentTitle.split(' - ');
+  if (titleParts.length > 1) {
+    document.title = `${titleParts[0]} - ${translateText(titleParts.slice(1).join(' - '))}`;
+  }
 
   const select = document.getElementById('languageSelect');
   if (select && select.value !== language) select.value = language;
+  const languageLabel = document.querySelector('.language-switcher span');
+  if (languageLabel) {
+    languageLabel.textContent = language === 'zh' ? '语言' : language === 'id' ? 'Bahasa' : 'Language';
+  }
 
   translateOptions();
   translatePlaceholders();
