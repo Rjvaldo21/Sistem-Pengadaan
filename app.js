@@ -10,6 +10,466 @@ const defaultLoanPackages = [
 const currentPage = location.pathname.split('/').pop() || 'index.html';
 const isLoginPage = currentPage === 'login.html';
 const currentUser = localStorage.getItem('currentUser');
+const supportedLanguages = ['id', 'en', 'zh'];
+const languageNames = {
+  id: 'Indonesia',
+  en: 'English',
+  zh: '中文'
+};
+const originalTextValues = new WeakMap();
+const originalPlaceholderValues = new WeakMap();
+const originalOptionLabels = new WeakMap();
+
+const i18n = {
+  en: {
+    'Dashboard': 'Dashboard',
+    'Klien': 'Clients',
+    'Pinjaman': 'Loans',
+    'Jaminan': 'Collateral',
+    'Pembayaran': 'Payments',
+    'Jatuh Tempo': 'Due Dates',
+    'Lelang': 'Auction',
+    'Kas Masuk': 'Cash In',
+    'Kas Keluar': 'Cash Out',
+    'Laporan Keuangan': 'Financial Reports',
+    'Kontrak': 'Contracts',
+    'User & Role': 'Users & Roles',
+    'Pengaturan': 'Settings',
+    'Logout': 'Logout',
+    'Operasional': 'Operations',
+    'Keuangan': 'Finance',
+    'Dokumen & Sistem': 'Documents & System',
+    'Akun': 'Account',
+    'Pawn & Loan Management': 'Pawn & Loan Management',
+    'Ringkasan pinjaman, jaminan, kas, dan aktivitas penhoria.': 'Summary of loans, collateral, cash, and pawn activity.',
+    'Data klien yang mengajukan pinjaman dengan jaminan aset.': 'Client data for asset-backed loan applications.',
+    'Kelola kontrak pinjaman, margin, durasi, dan cicilan.': 'Manage loan contracts, margin, duration, and installments.',
+    'Kelola barang atau dokumen aset yang menjadi jaminan pinjaman.': 'Manage goods or asset documents used as loan collateral.',
+    'Catatan cicilan, bunga, dan pelunasan klien.': 'Client installment, margin, and settlement records.',
+    'Pinjaman yang mendekati atau melewati tanggal jatuh tempo.': 'Loans approaching or past their due date.',
+    'Jaminan dari pinjaman macet yang siap diproses untuk lelang.': 'Collateral from defaulted loans ready for auction processing.',
+    'Pemasukan dari pembayaran klien dan aktivitas keuangan lain.': 'Income from client payments and other financial activities.',
+    'Pengeluaran untuk pencairan dana dan operasional perusahaan.': 'Expenses for fund disbursement and company operations.',
+    'Ringkasan modal, pencairan, pembayaran, margin, dan kas.': 'Summary of capital, disbursement, payments, margin, and cash.',
+    'Dokumen perjanjian pinjaman dengan jaminan.': 'Asset-backed loan agreement documents.',
+    'Akses staff seperti Direktur, Finance, Treasury, Accounting, IT, dan Receptionist.': 'Staff access such as Director, Finance, Treasury, Accounting, IT, and Receptionist.',
+    'Konfigurasi profil usaha, modal, dan paket pinjaman.': 'Configure business profile, capital, and loan packages.',
+    'Cari klien, pinjaman, jaminan...': 'Search clients, loans, collateral...',
+    '+ Pinjaman Baru': '+ New Loan',
+    '+ Tambah Klien': '+ Add Client',
+    '+ Tambah Jaminan': '+ Add Collateral',
+    '+ Catat Pembayaran': '+ Record Payment',
+    'Cek Jatuh Tempo': 'Check Due Dates',
+    '+ Proses Lelang': '+ Process Auction',
+    '+ Catat Kas Masuk': '+ Record Cash In',
+    '+ Catat Kas Keluar': '+ Record Cash Out',
+    'Export Laporan': 'Export Report',
+    '+ Buat Kontrak': '+ Create Contract',
+    '+ Tambah User': '+ Add User',
+    'Simpan': 'Save',
+    'Export': 'Export',
+    'Export CSV': 'Export CSV',
+    'Buka Dashboard': 'Open Dashboard',
+    'Daftar Pinjaman Terbaru': 'Latest Loans',
+    'Monitoring pinjaman, jaminan, jatuh tempo, dan status pembayaran.': 'Monitor loans, collateral, due dates, and payment status.',
+    'Form Pinjaman / Penhoria': 'Loan / Pawn Form',
+    'Input data klien, pinjaman, dan jaminan.': 'Enter client, loan, and collateral data.',
+    'Total Klien': 'Total Clients',
+    'Pinjaman Aktif': 'Active Loans',
+    'Jaminan Disimpan': 'Stored Collateral',
+    'Modal Awal': 'Initial Capital',
+    'Kode Pinjaman': 'Loan Code',
+    'Nama Klien': 'Client Name',
+    'Jenis Jaminan': 'Collateral Type',
+    'Tanggal Pinjam': 'Loan Date',
+    'Jumlah Pinjaman': 'Loan Amount',
+    'Sisa Tagihan': 'Remaining Balance',
+    'Jatuh Tempo': 'Due Date',
+    'Status': 'Status',
+    'Aksi': 'Action',
+    'Detail': 'Detail',
+    'Nomor Kontak': 'Contact Number',
+    'Alamat': 'Address',
+    'Jenis Identitas': 'Identity Type',
+    'No. Kartu Identitas': 'Identity Number',
+    'Tanggal Lahir': 'Date of Birth',
+    'Gender': 'Gender',
+    'Status Pekerjaan': 'Job Status',
+    'Kontak Darurat': 'Emergency Contact',
+    'Paket Pinjaman': 'Loan Package',
+    'Margin / Bunga (%)': 'Margin / Interest (%)',
+    'Durasi': 'Duration',
+    'Tanggal Jatuh Tempo': 'Due Date',
+    'Metode Pencairan': 'Disbursement Method',
+    'Status Pencairan': 'Disbursement Status',
+    'Denda Keterlambatan (%)': 'Late Penalty (%)',
+    'Petugas': 'Officer',
+    'Nama Barang': 'Item Name',
+    'Nilai Taksiran': 'Appraisal Value',
+    'Kondisi Barang': 'Item Condition',
+    'Nomor Dokumen': 'Document Number',
+    'Lokasi Penyimpanan': 'Storage Location',
+    'Penaksir': 'Appraiser',
+    'Tanggal Taksir': 'Appraisal Date',
+    'Referensi Foto Jaminan': 'Collateral Photo Reference',
+    'Total Harus Dibayar': 'Total Payable',
+    'Cicilan per Bulan': 'Monthly Installment',
+    'Catatan': 'Notes',
+    'Reset': 'Reset',
+    'Simpan Pinjaman': 'Save Loan',
+    'Data Klien': 'Client Data',
+    'Profil klien penhoria dan kontak aktif.': 'Pawn client profile and active contact.',
+    'Kontak': 'Contact',
+    'Identitas': 'Identity',
+    'Pekerjaan': 'Occupation',
+    'Data Jaminan': 'Collateral Data',
+    'Barang dan dokumen aset yang ditahan sebagai jaminan.': 'Goods and asset documents held as collateral.',
+    'Lokasi Simpan': 'Storage Location',
+    'Status Jaminan': 'Collateral Status',
+    'Kode Bayar': 'Payment Code',
+    'Angsuran': 'Installment',
+    'Jenis': 'Type',
+    'Metode': 'Method',
+    'Tanggal Bayar': 'Payment Date',
+    'Jumlah': 'Amount',
+    'Denda': 'Penalty',
+    'Sisa Saldo': 'Remaining Balance',
+    'Hari': 'Days',
+    'Kode Lelang': 'Auction Code',
+    'Harga Buka': 'Opening Price',
+    'Tanggal': 'Date',
+    'Kode': 'Code',
+    'Kategori': 'Category',
+    'Keterangan': 'Description',
+    'Penerima': 'Recipient',
+    'Keperluan': 'Purpose',
+    'No. Kontrak': 'Contract No.',
+    'Nilai Pinjaman': 'Loan Value',
+    'Saksi': 'Witness',
+    'Nama': 'Name',
+    'Email': 'Email',
+    'Role': 'Role',
+    'Area Akses': 'Access Area',
+    'Pengaturan Sistem': 'System Settings',
+    'Profil dasar perusahaan dan aturan pinjaman.': 'Basic company profile and loan rules.',
+    'Nama Usaha': 'Business Name',
+    'Modal Awal (USD)': 'Initial Capital (USD)',
+    'Durasi Default': 'Default Duration',
+    'Margin Default (%)': 'Default Margin (%)',
+    'Alamat Usaha': 'Business Address',
+    'Simpan Pengaturan': 'Save Settings',
+    'Produk pinjaman sesuai proposal bisnis.': 'Loan products based on the business proposal.',
+    'Paket': 'Package',
+    'Pembayaran per Bulan': 'Monthly Payment',
+    'Margin': 'Margin',
+    '+ Tambah Paket': '+ Add Package',
+    'Simpan Paket Pinjaman': 'Save Loan Packages',
+    'Periode': 'Period',
+    'Jenis Laporan': 'Report Type',
+    'Komponen': 'Component',
+    'Nilai': 'Value',
+    'Kas Masuk Bulan Ini': 'Cash In This Month',
+    'Kas Keluar Bulan Ini': 'Cash Out This Month',
+    'Estimasi Margin': 'Estimated Margin',
+    'Ringkasan Keuangan': 'Financial Summary',
+    'Jaminan': 'Collateral',
+    'Login': 'Login',
+    'Email / Username': 'Email / Username',
+    'Password': 'Password',
+    'Masukkan password': 'Enter password',
+    'Nama lengkap klien': 'Client full name',
+    'Nomor telepon': 'Phone number',
+    'Alamat klien': 'Client address',
+    'Nama / nomor keluarga': 'Family name / number',
+    'Nama staff': 'Staff name',
+    'Contoh: Yamaha NMAX, Emas 20 gram': 'Example: Yamaha NMAX, 20 gram gold',
+    'Nomor STNK/BPKB/sertifikat jika ada': 'STNK/BPKB/certificate number if any',
+    'Nama penaksir': 'Appraiser name',
+    'Nama file / URL foto barang': 'File name / item photo URL',
+    'Catatan taksiran, risiko, atau kondisi jaminan...': 'Appraisal, risk, or collateral condition notes...',
+    'Pilih paket pinjaman': 'Select loan package',
+    'Pilih jenis': 'Select type',
+    'Batal': 'Cancel',
+    'Print': 'Print',
+    'Email': 'Email',
+    'WhatsApp': 'WhatsApp',
+    'Aktif': 'Active',
+    'Proses': 'In Process',
+    'Lunas': 'Paid Off',
+    'Terlambat': 'Overdue',
+    'Diterima': 'Received',
+    'Pending': 'Pending',
+    'Ditolak': 'Rejected',
+    'Selesai': 'Completed',
+    'Tercatat': 'Recorded',
+    'Draft': 'Draft',
+    'Ditandatangani': 'Signed',
+    'Berakhir': 'Ended',
+    'Disimpan': 'Stored',
+    'Ditebus': 'Redeemed',
+    'Proses Lelang': 'Auction Process',
+    'Persiapan': 'Preparation',
+    'Berjalan': 'Running',
+    'Batal': 'Cancelled',
+    'Pria': 'Male',
+    'Wanita': 'Female',
+    'Karyawan': 'Employee',
+    'Wirausaha': 'Entrepreneur',
+    'Petani': 'Farmer',
+    'Belum bekerja': 'Unemployed',
+    'Tunai': 'Cash',
+    'Transfer Bank': 'Bank Transfer',
+    'Mobile Banking': 'Mobile Banking',
+    'Dicairkan': 'Disbursed',
+    'Ditahan': 'Held',
+    'Baik': 'Good',
+    'Rusak ringan': 'Minor Damage',
+    'Rusak berat': 'Severe Damage',
+    'Emas': 'Gold',
+    'Motor': 'Motorcycle',
+    'Mobil': 'Car',
+    'Laptop': 'Laptop',
+    'Telepon': 'Phone',
+    'Rumah': 'House',
+    'Tanah': 'Land',
+    'Dokumen Kendaraan': 'Vehicle Document',
+    'Dokumen Aset': 'Asset Document',
+    'Cicilan': 'Installment',
+    'Pelunasan': 'Settlement',
+    'Biaya Administrasi': 'Administration Fee',
+    'Hasil Lelang': 'Auction Proceeds',
+    'Lainnya': 'Other',
+    'Pencairan Pinjaman': 'Loan Disbursement',
+    'Operasional Kantor': 'Office Operations',
+    'Gaji Staff': 'Staff Salary',
+    'Transportasi': 'Transportation',
+    'Semua Periode': 'All Periods'
+  },
+  zh: {
+    'Dashboard': '仪表盘',
+    'Klien': '客户',
+    'Pinjaman': '贷款',
+    'Jaminan': '抵押品',
+    'Pembayaran': '还款',
+    'Jatuh Tempo': '到期',
+    'Lelang': '拍卖',
+    'Kas Masuk': '现金收入',
+    'Kas Keluar': '现金支出',
+    'Laporan Keuangan': '财务报表',
+    'Kontrak': '合同',
+    'User & Role': '用户与角色',
+    'Pengaturan': '设置',
+    'Logout': '退出',
+    'Operasional': '运营',
+    'Keuangan': '财务',
+    'Dokumen & Sistem': '文件与系统',
+    'Akun': '账户',
+    'Pawn & Loan Management': '典当与贷款管理',
+    'Ringkasan pinjaman, jaminan, kas, dan aktivitas penhoria.': '贷款、抵押品、现金和典当活动概览。',
+    'Data klien yang mengajukan pinjaman dengan jaminan aset.': '申请资产抵押贷款的客户资料。',
+    'Kelola kontrak pinjaman, margin, durasi, dan cicilan.': '管理贷款合同、利率、期限和分期付款。',
+    'Kelola barang atau dokumen aset yang menjadi jaminan pinjaman.': '管理作为贷款抵押的物品或资产文件。',
+    'Catatan cicilan, bunga, dan pelunasan klien.': '客户分期、利息和结清记录。',
+    'Pinjaman yang mendekati atau melewati tanggal jatuh tempo.': '即将到期或已逾期的贷款。',
+    'Jaminan dari pinjaman macet yang siap diproses untuk lelang.': '可进入拍卖流程的逾期贷款抵押品。',
+    'Pemasukan dari pembayaran klien dan aktivitas keuangan lain.': '客户付款和其他财务活动收入。',
+    'Pengeluaran untuk pencairan dana dan operasional perusahaan.': '放款和公司运营支出。',
+    'Ringkasan modal, pencairan, pembayaran, margin, dan kas.': '资本、放款、还款、利润和现金概览。',
+    'Dokumen perjanjian pinjaman dengan jaminan.': '抵押贷款协议文件。',
+    'Akses staff seperti Direktur, Finance, Treasury, Accounting, IT, dan Receptionist.': '员工访问权限，如董事、财务、出纳、会计、IT和前台。',
+    'Konfigurasi profil usaha, modal, dan paket pinjaman.': '配置企业资料、资本和贷款套餐。',
+    'Cari klien, pinjaman, jaminan...': '搜索客户、贷款、抵押品...',
+    '+ Pinjaman Baru': '+ 新贷款',
+    '+ Tambah Klien': '+ 添加客户',
+    '+ Tambah Jaminan': '+ 添加抵押品',
+    '+ Catat Pembayaran': '+ 记录还款',
+    'Cek Jatuh Tempo': '检查到期',
+    '+ Proses Lelang': '+ 处理拍卖',
+    '+ Catat Kas Masuk': '+ 记录收入',
+    '+ Catat Kas Keluar': '+ 记录支出',
+    'Export Laporan': '导出报表',
+    '+ Buat Kontrak': '+ 创建合同',
+    '+ Tambah User': '+ 添加用户',
+    'Simpan': '保存',
+    'Export': '导出',
+    'Export CSV': '导出CSV',
+    'Buka Dashboard': '打开仪表盘',
+    'Daftar Pinjaman Terbaru': '最新贷款',
+    'Monitoring pinjaman, jaminan, jatuh tempo, dan status pembayaran.': '监控贷款、抵押品、到期日和还款状态。',
+    'Form Pinjaman / Penhoria': '贷款/典当表单',
+    'Input data klien, pinjaman, dan jaminan.': '输入客户、贷款和抵押品资料。',
+    'Total Klien': '客户总数',
+    'Pinjaman Aktif': '活跃贷款',
+    'Jaminan Disimpan': '已保管抵押品',
+    'Modal Awal': '初始资本',
+    'Kode Pinjaman': '贷款编号',
+    'Nama Klien': '客户姓名',
+    'Jenis Jaminan': '抵押品类型',
+    'Tanggal Pinjam': '贷款日期',
+    'Jumlah Pinjaman': '贷款金额',
+    'Sisa Tagihan': '剩余应收',
+    'Jatuh Tempo': '到期日',
+    'Status': '状态',
+    'Aksi': '操作',
+    'Detail': '详情',
+    'Nomor Kontak': '联系电话',
+    'Alamat': '地址',
+    'Jenis Identitas': '证件类型',
+    'No. Kartu Identitas': '证件号码',
+    'Tanggal Lahir': '出生日期',
+    'Gender': '性别',
+    'Status Pekerjaan': '职业状态',
+    'Kontak Darurat': '紧急联系人',
+    'Paket Pinjaman': '贷款套餐',
+    'Margin / Bunga (%)': '利润/利息(%)',
+    'Durasi': '期限',
+    'Tanggal Jatuh Tempo': '到期日期',
+    'Metode Pencairan': '放款方式',
+    'Status Pencairan': '放款状态',
+    'Denda Keterlambatan (%)': '逾期罚金(%)',
+    'Petugas': '经办人',
+    'Nama Barang': '物品名称',
+    'Nilai Taksiran': '估值',
+    'Kondisi Barang': '物品状况',
+    'Nomor Dokumen': '文件编号',
+    'Lokasi Penyimpanan': '保管位置',
+    'Penaksir': '估价人',
+    'Tanggal Taksir': '估价日期',
+    'Referensi Foto Jaminan': '抵押品照片参考',
+    'Total Harus Dibayar': '应还总额',
+    'Cicilan per Bulan': '每月分期',
+    'Catatan': '备注',
+    'Reset': '重置',
+    'Simpan Pinjaman': '保存贷款',
+    'Data Klien': '客户资料',
+    'Profil klien penhoria dan kontak aktif.': '典当客户资料和有效联系方式。',
+    'Kontak': '联系方式',
+    'Identitas': '身份',
+    'Pekerjaan': '职业',
+    'Data Jaminan': '抵押品资料',
+    'Barang dan dokumen aset yang ditahan sebagai jaminan.': '作为抵押保管的物品和资产文件。',
+    'Lokasi Simpan': '保管位置',
+    'Status Jaminan': '抵押品状态',
+    'Kode Bayar': '付款编号',
+    'Angsuran': '期数',
+    'Jenis': '类型',
+    'Metode': '方式',
+    'Tanggal Bayar': '付款日期',
+    'Jumlah': '金额',
+    'Denda': '罚金',
+    'Sisa Saldo': '剩余余额',
+    'Hari': '天数',
+    'Kode Lelang': '拍卖编号',
+    'Harga Buka': '起拍价',
+    'Tanggal': '日期',
+    'Kode': '编号',
+    'Kategori': '类别',
+    'Keterangan': '说明',
+    'Penerima': '收款人',
+    'Keperluan': '用途',
+    'No. Kontrak': '合同号',
+    'Nilai Pinjaman': '贷款价值',
+    'Saksi': '见证人',
+    'Nama': '姓名',
+    'Email': '邮箱',
+    'Role': '角色',
+    'Area Akses': '访问范围',
+    'Pengaturan Sistem': '系统设置',
+    'Profil dasar perusahaan dan aturan pinjaman.': '公司基本资料和贷款规则。',
+    'Nama Usaha': '企业名称',
+    'Modal Awal (USD)': '初始资本(USD)',
+    'Durasi Default': '默认期限',
+    'Margin Default (%)': '默认利润(%)',
+    'Alamat Usaha': '企业地址',
+    'Simpan Pengaturan': '保存设置',
+    'Produk pinjaman sesuai proposal bisnis.': '根据商业计划的贷款产品。',
+    'Paket': '套餐',
+    'Pembayaran per Bulan': '每月付款',
+    'Margin': '利润',
+    '+ Tambah Paket': '+ 添加套餐',
+    'Simpan Paket Pinjaman': '保存贷款套餐',
+    'Periode': '期间',
+    'Jenis Laporan': '报表类型',
+    'Komponen': '项目',
+    'Nilai': '数值',
+    'Kas Masuk Bulan Ini': '本月收入',
+    'Kas Keluar Bulan Ini': '本月支出',
+    'Estimasi Margin': '预计利润',
+    'Ringkasan Keuangan': '财务摘要',
+    'Jaminan': '抵押品',
+    'Login': '登录',
+    'Email / Username': '邮箱/用户名',
+    'Password': '密码',
+    'Masukkan password': '输入密码',
+    'Nama lengkap klien': '客户全名',
+    'Nomor telepon': '电话号码',
+    'Alamat klien': '客户地址',
+    'Nama / nomor keluarga': '家属姓名/电话',
+    'Nama staff': '员工姓名',
+    'Contoh: Yamaha NMAX, Emas 20 gram': '例如：Yamaha NMAX，20克黄金',
+    'Nomor STNK/BPKB/sertifikat jika ada': '如有，填写车辆/产权文件编号',
+    'Nama penaksir': '估价人姓名',
+    'Nama file / URL foto barang': '文件名/物品照片URL',
+    'Catatan taksiran, risiko, atau kondisi jaminan...': '估值、风险或抵押品状况备注...',
+    'Pilih paket pinjaman': '选择贷款套餐',
+    'Pilih jenis': '选择类型',
+    'Batal': '取消',
+    'Print': '打印',
+    'Email': '邮箱',
+    'WhatsApp': 'WhatsApp',
+    'Aktif': '活跃',
+    'Proses': '处理中',
+    'Lunas': '已结清',
+    'Terlambat': '逾期',
+    'Diterima': '已收到',
+    'Pending': '待处理',
+    'Ditolak': '已拒绝',
+    'Selesai': '完成',
+    'Tercatat': '已记录',
+    'Draft': '草稿',
+    'Ditandatangani': '已签署',
+    'Berakhir': '已结束',
+    'Disimpan': '已保管',
+    'Ditebus': '已赎回',
+    'Proses Lelang': '拍卖处理中',
+    'Persiapan': '准备中',
+    'Berjalan': '进行中',
+    'Batal': '取消',
+    'Pria': '男',
+    'Wanita': '女',
+    'Karyawan': '员工',
+    'Wirausaha': '个体经营',
+    'Petani': '农民',
+    'Belum bekerja': '未就业',
+    'Tunai': '现金',
+    'Transfer Bank': '银行转账',
+    'Mobile Banking': '手机银行',
+    'Dicairkan': '已放款',
+    'Ditahan': '已保留',
+    'Baik': '良好',
+    'Rusak ringan': '轻微损坏',
+    'Rusak berat': '严重损坏',
+    'Emas': '黄金',
+    'Motor': '摩托车',
+    'Mobil': '汽车',
+    'Laptop': '笔记本电脑',
+    'Telepon': '手机',
+    'Rumah': '房屋',
+    'Tanah': '土地',
+    'Dokumen Kendaraan': '车辆文件',
+    'Dokumen Aset': '资产文件',
+    'Cicilan': '分期',
+    'Pelunasan': '结清',
+    'Biaya Administrasi': '管理费',
+    'Hasil Lelang': '拍卖收入',
+    'Lainnya': '其他',
+    'Pencairan Pinjaman': '贷款放款',
+    'Operasional Kantor': '办公室运营',
+    'Gaji Staff': '员工工资',
+    'Transportasi': '交通',
+    'Semua Periode': '所有期间'
+  }
+};
 
 if (!isLoginPage && !currentUser) {
   window.location.href = 'login.html';
@@ -525,6 +985,7 @@ function renderTemporaryDatabase() {
   renderReportPage(loans);
   renderContractPage(loans);
   renderUserPage();
+  applyLanguage();
 }
 
 function renderDashboardLoans(loans) {
@@ -864,6 +1325,7 @@ function openDataModal(title, subtitle, bodyHtml) {
   modalBody.innerHTML = bodyHtml;
   modalOverlay.classList.add('show');
   modalBody.querySelector('input, select, textarea')?.focus();
+  applyLanguage();
 }
 
 function modalActions(primaryLabel) {
@@ -2066,7 +2528,7 @@ function showToast(message) {
   const toast = document.getElementById('toast');
   if (!toast) return;
 
-  toast.textContent = message;
+  toast.textContent = translateText(message);
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2600);
 }
@@ -2074,7 +2536,8 @@ function showToast(message) {
 function formatDate(dateString) {
   const date = new Date(dateString);
   if (!dateString || Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleDateString('id-ID', {
+  const locale = getLanguage() === 'en' ? 'en-US' : getLanguage() === 'zh' ? 'zh-CN' : 'id-ID';
+  return date.toLocaleDateString(locale, {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
@@ -2090,10 +2553,116 @@ function escapeHTML(value) {
     .replaceAll("'", '&#039;');
 }
 
+function getLanguage() {
+  const savedLanguage = localStorage.getItem('appLanguage') || 'id';
+  return supportedLanguages.includes(savedLanguage) ? savedLanguage : 'id';
+}
+
+function setLanguage(language) {
+  localStorage.setItem('appLanguage', language);
+  applyLanguage();
+}
+
+function translateText(text) {
+  const language = getLanguage();
+  const cleanText = String(text || '').trim();
+  if (language === 'id' || !cleanText) return text;
+  return i18n[language]?.[cleanText] || text;
+}
+
+function preserveSpacing(original, translated) {
+  const start = String(original).match(/^\s*/)?.[0] || '';
+  const end = String(original).match(/\s*$/)?.[0] || '';
+  return `${start}${translated}${end}`;
+}
+
+function injectLanguageSelector() {
+  if (document.getElementById('languageSelect')) return;
+
+  const wrapper = document.createElement('label');
+  wrapper.className = 'language-switcher';
+  wrapper.setAttribute('data-no-i18n', 'true');
+  wrapper.innerHTML = `
+    <span>Language</span>
+    <select id="languageSelect" aria-label="Language">
+      ${supportedLanguages.map(language => `<option value="${language}">${languageNames[language]}</option>`).join('')}
+    </select>
+  `;
+
+  const target = document.querySelector('.topbar-actions') || document.querySelector('.login-card');
+  if (!target) return;
+
+  target.appendChild(wrapper);
+  const select = document.getElementById('languageSelect');
+  select.value = getLanguage();
+  select.addEventListener('change', event => setLanguage(event.target.value));
+}
+
+function translateOptions() {
+  document.querySelectorAll('option').forEach(option => {
+    if (option.closest('[data-no-i18n]')) return;
+    if (!originalOptionLabels.has(option)) {
+      const originalLabel = option.textContent.trim();
+      originalOptionLabels.set(option, originalLabel);
+      if (!option.hasAttribute('value')) option.value = originalLabel;
+    }
+
+    const originalLabel = originalOptionLabels.get(option);
+    option.textContent = translateText(originalLabel);
+  });
+}
+
+function translatePlaceholders() {
+  document.querySelectorAll('[placeholder]').forEach(element => {
+    if (element.closest('[data-no-i18n]')) return;
+    if (!originalPlaceholderValues.has(element)) {
+      originalPlaceholderValues.set(element, element.getAttribute('placeholder'));
+    }
+
+    const originalPlaceholder = originalPlaceholderValues.get(element);
+    element.setAttribute('placeholder', translateText(originalPlaceholder));
+  });
+}
+
+function translateTextNodes() {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || parent.closest('[data-no-i18n]')) return NodeFilter.FILTER_REJECT;
+      if (['SCRIPT', 'STYLE', 'TEXTAREA', 'OPTION'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+      if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    if (!originalTextValues.has(node)) originalTextValues.set(node, node.nodeValue);
+    const originalValue = originalTextValues.get(node);
+    const translated = translateText(originalValue.trim());
+    node.nodeValue = preserveSpacing(originalValue, translated);
+  });
+}
+
+function applyLanguage() {
+  const language = getLanguage();
+  document.documentElement.lang = language === 'zh' ? 'zh-CN' : language;
+
+  const select = document.getElementById('languageSelect');
+  if (select && select.value !== language) select.value = language;
+
+  translateOptions();
+  translatePlaceholders();
+  translateTextNodes();
+}
+
 document.getElementById('loanDate')?.addEventListener('change', syncDueDate);
 document.getElementById('duration')?.addEventListener('change', calculateLoan);
 document.getElementById('modalOverlay')?.addEventListener('click', function(event) {
   if (event.target === this) closeModal();
 });
 
+injectLanguageSelector();
 renderTemporaryDatabase();

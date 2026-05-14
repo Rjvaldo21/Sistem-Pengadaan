@@ -204,6 +204,21 @@ body {
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'/%3E%3Cpath d='m16 17 5-5-5-5'/%3E%3Cpath d='M21 12H9'/%3E%3C/svg%3E");
 }
 
+.nav-item[href="index.html"]::before { --nav-icon: url("assets/icons/dashboard.svg"); }
+.nav-item[href="klien.html"]::before { --nav-icon: url("assets/icons/clients.svg"); }
+.nav-item[href="pinjaman.html"]::before { --nav-icon: url("assets/icons/loans.svg"); }
+.nav-item[href="jaminan.html"]::before { --nav-icon: url("assets/icons/collateral.svg"); }
+.nav-item[href="pembayaran.html"]::before { --nav-icon: url("assets/icons/payments.svg"); }
+.nav-item[href="jatuh-tempo.html"]::before { --nav-icon: url("assets/icons/due-date.svg"); }
+.nav-item[href="lelang.html"]::before { --nav-icon: url("assets/icons/auction.svg"); }
+.nav-item[href="kas-masuk.html"]::before { --nav-icon: url("assets/icons/cash-in.svg"); }
+.nav-item[href="kas-keluar.html"]::before { --nav-icon: url("assets/icons/cash-out.svg"); }
+.nav-item[href="laporan-keuangan.html"]::before { --nav-icon: url("assets/icons/reports.svg"); }
+.nav-item[href="kontrak.html"]::before { --nav-icon: url("assets/icons/contracts.svg"); }
+.nav-item[href="user-role.html"]::before { --nav-icon: url("assets/icons/users.svg"); }
+.nav-item[href="pengaturan.html"]::before { --nav-icon: url("assets/icons/settings.svg"); }
+.nav-item[href="login.html"]::before { --nav-icon: url("assets/icons/logout.svg"); }
+
 .nav-item:hover,
 .nav-item.active {
   background: rgba(37, 99, 235, 0.18);
@@ -346,6 +361,23 @@ body {
   top: 50%;
   transform: translateY(-50%);
   color: var(--muted);
+}
+
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.language-switcher select {
+  width: auto;
+  min-width: 126px;
+  padding: 10px 34px 10px 12px;
+  border-radius: 13px;
+  background: #f8fafc;
 }
 
 .btn {
@@ -782,6 +814,11 @@ textarea:focus {
 
   .search-box,
   .search-box input {
+    width: 100%;
+  }
+
+  .language-switcher,
+  .language-switcher select {
     width: 100%;
   }
 
