@@ -298,6 +298,18 @@ body {
   margin-top: 8px;
 }
 
+.login-card .language-switcher {
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.login-card .language-switcher select {
+  width: min(190px, 100%);
+}
+
 .main {
   flex: 1;
   min-width: 0;
@@ -908,5 +920,15 @@ textarea:focus {
 
   .login-brand {
     align-items: flex-start;
+  }
+
+  .login-card .language-switcher {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .login-card .language-switcher select {
+    width: 100%;
   }
 }
