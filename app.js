@@ -1,4 +1,5 @@
 const today = new Date().toISOString().split('T')[0];
+const DEFAULT_ADMINISTRATION_FEE = 2;
 const defaultLoanPackages = [
   { name: 'Paket 1', amount: '$500', monthly: '$200', duration: '3 bulan', margin: '15%' },
   { name: 'Paket 2', amount: '$1,000', monthly: '$350', duration: '3 bulan', margin: '14%' },
@@ -7,8 +8,42 @@ const defaultLoanPackages = [
   { name: 'Paket 5', amount: '$5,000 ke atas', monthly: '$1,000', duration: '3 bulan', margin: '10%' }
 ];
 
-const currentPage = location.pathname.split('/').pop() || 'index.html';
-const isLoginPage = currentPage === 'login.html';
+const routeMap = {
+  '': 'dashboard',
+  'index.html': 'dashboard',
+  dashboard: 'dashboard',
+  'login.html': 'login',
+  login: 'login',
+  'klien.html': 'klien',
+  klien: 'klien',
+  'pinjaman.html': 'pinjaman',
+  pinjaman: 'pinjaman',
+  'pinjaman-baru.html': 'pinjaman-baru',
+  'pinjaman-baru': 'pinjaman-baru',
+  'jaminan.html': 'jaminan',
+  jaminan: 'jaminan',
+  'pembayaran.html': 'pembayaran',
+  pembayaran: 'pembayaran',
+  'jatuh-tempo.html': 'jatuh-tempo',
+  'jatuh-tempo': 'jatuh-tempo',
+  'lelang.html': 'lelang',
+  lelang: 'lelang',
+  'kas-masuk.html': 'kas-masuk',
+  'kas-masuk': 'kas-masuk',
+  'kas-keluar.html': 'kas-keluar',
+  'kas-keluar': 'kas-keluar',
+  'laporan-keuangan.html': 'laporan-keuangan',
+  'laporan-keuangan': 'laporan-keuangan',
+  'kontrak.html': 'kontrak',
+  kontrak: 'kontrak',
+  'user-role.html': 'user-role',
+  'user-role': 'user-role',
+  'pengaturan.html': 'pengaturan',
+  pengaturan: 'pengaturan'
+};
+const currentRouteSegment = location.pathname.split('/').filter(Boolean).pop() || '';
+const currentPage = routeMap[currentRouteSegment] || currentRouteSegment.replace(/\.html$/, '');
+const isLoginPage = currentPage === 'login';
 const currentUser = localStorage.getItem('currentUser');
 const supportedLanguages = ['id', 'en', 'zh'];
 const languageNames = {
@@ -160,6 +195,7 @@ const i18n = {
     'Modal Awal (USD)': 'Initial Capital (USD)',
     'Durasi Default': 'Default Duration',
     'Margin Default (%)': 'Default Margin (%)',
+    'Biaya Administrasi Default (USD)': 'Default Administration Fee (USD)',
     'Alamat Usaha': 'Business Address',
     'Simpan Pengaturan': 'Save Settings',
     'Produk pinjaman sesuai proposal bisnis.': 'Loan products based on the business proposal.',
@@ -196,6 +232,7 @@ const i18n = {
     'Pilih jenis': 'Select type',
     'Batal': 'Cancel',
     'Print': 'Print',
+    'Print SBG': 'Print SBG',
     'Email': 'Email',
     'WhatsApp': 'WhatsApp',
     'Aktif': 'Active',
@@ -242,6 +279,8 @@ const i18n = {
     'Cicilan': 'Installment',
     'Pelunasan': 'Settlement',
     'Biaya Administrasi': 'Administration Fee',
+    'Biaya Admin': 'Admin Fee',
+    'Total Tagihan': 'Total Bill',
     'Hasil Lelang': 'Auction Proceeds',
     'Lainnya': 'Other',
     'Pencairan Pinjaman': 'Loan Disbursement',
@@ -388,6 +427,7 @@ const i18n = {
     'Modal Awal (USD)': '初始资本(USD)',
     'Durasi Default': '默认期限',
     'Margin Default (%)': '默认利润(%)',
+    'Biaya Administrasi Default (USD)': '默认管理费 (USD)',
     'Alamat Usaha': '企业地址',
     'Simpan Pengaturan': '保存设置',
     'Produk pinjaman sesuai proposal bisnis.': '根据商业计划的贷款产品。',
@@ -424,6 +464,7 @@ const i18n = {
     'Pilih jenis': '选择类型',
     'Batal': '取消',
     'Print': '打印',
+    'Print SBG': '打印SBG',
     'Email': '邮箱',
     'WhatsApp': 'WhatsApp',
     'Aktif': '活跃',
@@ -470,6 +511,8 @@ const i18n = {
     'Cicilan': '分期',
     'Pelunasan': '结清',
     'Biaya Administrasi': '管理费',
+    'Biaya Admin': '管理费',
+    'Total Tagihan': '账单总额',
     'Hasil Lelang': '拍卖收入',
     'Lainnya': '其他',
     'Pencairan Pinjaman': '贷款放款',
@@ -745,11 +788,11 @@ Object.assign(i18n.en, extraTranslations.en);
 Object.assign(i18n.zh, extraTranslations.zh);
 
 if (!isLoginPage && !currentUser) {
-  window.location.href = 'login.html';
+  window.location.href = '/login';
 }
 
 if (isLoginPage && currentUser) {
-  window.location.href = 'index.html';
+  window.location.href = '/dashboard';
 }
 
 const loanDateInput = document.getElementById('loanDate');
@@ -787,14 +830,14 @@ function login(event) {
   localStorage.setItem('currentUser', username);
   showToast('Login berhasil.');
   setTimeout(() => {
-    window.location.href = 'index.html';
+    window.location.href = '/dashboard';
   }, 400);
 }
 
 function logout(event) {
   event?.preventDefault();
   localStorage.removeItem('currentUser');
-  window.location.href = 'login.html';
+  window.location.href = '/login';
 }
 
 function openModal() {
@@ -805,7 +848,7 @@ function openModal() {
     return;
   }
 
-  window.location.href = 'pinjaman-baru.html';
+  window.location.href = '/pinjaman-baru';
 }
 
 function closeModal() {
@@ -828,10 +871,13 @@ function calculateLoan() {
   const amount = Number(document.getElementById('loanAmount')?.value) || 0;
   const margin = Number(document.getElementById('margin')?.value) || 0;
   const duration = Number(document.getElementById('duration')?.value) || 3;
-  const total = amount * (1 + margin / 100);
+  const administrationFee = getAdministrationFee();
+  const total = amount * (1 + margin / 100) + administrationFee;
   const monthly = duration > 0 ? total / duration : 0;
+  const adminFee = document.getElementById('adminFee');
   const monthlyPayment = document.getElementById('monthlyPayment');
   const totalPayable = document.getElementById('totalPayable');
+  if (adminFee) adminFee.textContent = `$${administrationFee.toFixed(2)}`;
   if (monthlyPayment) monthlyPayment.textContent = `$${monthly.toFixed(2)}`;
   if (totalPayable) totalPayable.textContent = `$${total.toFixed(2)}`;
   syncDueDate();
@@ -911,9 +957,12 @@ function applyLoanPackage() {
   if (monthlyPayment && selectedPackage.monthly) {
     monthlyPayment.textContent = `$${parseMoney(selectedPackage.monthly).toFixed(2)}`;
     const totalPayable = document.getElementById('totalPayable');
+    const adminFee = document.getElementById('adminFee');
+    const administrationFee = getAdministrationFee();
     const amount = parseMoney(selectedPackage.amount);
     const packageMargin = parsePercent(selectedPackage.margin);
-    if (totalPayable) totalPayable.textContent = `$${(amount * (1 + packageMargin / 100)).toFixed(2)}`;
+    if (adminFee) adminFee.textContent = `$${administrationFee.toFixed(2)}`;
+    if (totalPayable) totalPayable.textContent = `$${(amount * (1 + packageMargin / 100) + administrationFee).toFixed(2)}`;
   } else {
     calculateLoan();
   }
@@ -1206,8 +1255,9 @@ function money(value) {
 function getTotalPayable(loan) {
   const amount = Number(loan.amount || 0);
   const margin = Number(loan.margin || 0);
+  const adminFee = Number(loan.adminFee ?? getAdministrationFee());
   const penalty = Number(loan.penaltyAmount || 0);
-  return amount * (1 + margin / 100) + penalty;
+  return amount * (1 + margin / 100) + adminFee + penalty;
 }
 
 function getPaymentsForLoan(loanCode) {
@@ -1278,7 +1328,7 @@ function renderDashboardLoans(loans) {
 }
 
 function renderLoanPage(loans) {
-  if (!location.pathname.endsWith('pinjaman.html')) return;
+  if (currentPage !== 'pinjaman') return;
   renderRows('.data-table tbody', loans.map(loan => `
     <tr>
       <td>${escapeHTML(loan.code)}</td>
@@ -1295,7 +1345,7 @@ function renderLoanPage(loans) {
 }
 
 function renderClientPage(loans) {
-  if (!location.pathname.endsWith('klien.html')) return;
+  if (currentPage !== 'klien') return;
   const loanClients = loans.map(loan => ({
     name: loan.client,
     contact: loan.contact,
@@ -1322,7 +1372,7 @@ function renderClientPage(loans) {
 }
 
 function renderCollateralPage(loans) {
-  if (!location.pathname.endsWith('jaminan.html')) return;
+  if (currentPage !== 'jaminan') return;
   const loanCollaterals = loans.map(loan => ({
     type: loan.collateralType,
     name: loan.collateralName,
@@ -1350,7 +1400,7 @@ function renderCollateralPage(loans) {
 }
 
 function renderPaymentPage() {
-  if (!location.pathname.endsWith('pembayaran.html')) return;
+  if (currentPage !== 'pembayaran') return;
   const payments = getRecords(storageKeys.payments, defaultPayments);
 
   renderRows('.data-table tbody', payments.map(payment => `
@@ -1371,7 +1421,7 @@ function renderPaymentPage() {
 }
 
 function renderDueDatePage(loans) {
-  if (!location.pathname.endsWith('jatuh-tempo.html')) return;
+  if (currentPage !== 'jatuh-tempo') return;
   const now = new Date(today);
   renderRows('.data-table tbody', loans.map(loan => {
     const due = new Date(loan.dueDate);
@@ -1391,7 +1441,7 @@ function renderDueDatePage(loans) {
 }
 
 function renderCashOutPage(loans) {
-  if (!location.pathname.endsWith('kas-keluar.html')) return;
+  if (currentPage !== 'kas-keluar') return;
   const loanCashOut = loans.map(loan => ({
     code: `KK-${loan.code.replace('PN-', '')}`,
     recipient: loan.client,
@@ -1421,7 +1471,7 @@ function renderCashOutPage(loans) {
 }
 
 function renderContractPage(loans) {
-  if (!location.pathname.endsWith('kontrak.html')) return;
+  if (currentPage !== 'kontrak') return;
   const loanContracts = loans.map(loan => ({
     contractNo: `KT-${loan.code.replace('PN-', '')}`,
     loanCode: loan.code,
@@ -1451,7 +1501,7 @@ function renderContractPage(loans) {
 }
 
 function renderAuctionPage() {
-  if (!location.pathname.endsWith('lelang.html')) return;
+  if (currentPage !== 'lelang') return;
   const auctions = getRecords(storageKeys.auctions, defaultAuctions);
 
   renderRows('.data-table tbody', auctions.map(auction => `
@@ -1467,7 +1517,7 @@ function renderAuctionPage() {
 }
 
 function renderCashInPage() {
-  if (!location.pathname.endsWith('kas-masuk.html')) return;
+  if (currentPage !== 'kas-masuk') return;
   const cashIn = getRecords(storageKeys.cashIn, defaultCashIn);
 
   renderRows('.data-table tbody', cashIn.map(item => `
@@ -1484,7 +1534,7 @@ function renderCashInPage() {
 }
 
 function renderUserPage() {
-  if (!location.pathname.endsWith('user-role.html')) return;
+  if (currentPage !== 'user-role') return;
   const users = getRecords(storageKeys.users, defaultUsers);
 
   renderRows('.data-table tbody', users.map(user => `
@@ -1499,7 +1549,7 @@ function renderUserPage() {
 }
 
 function renderReportPage(loans) {
-  if (!location.pathname.endsWith('laporan-keuangan.html')) return;
+  if (currentPage !== 'laporan-keuangan') return;
 
   const cashIn = getRecords(storageKeys.cashIn, defaultCashIn);
   const cashOut = [
@@ -1617,14 +1667,17 @@ function buildRecordSummary(title, fields) {
   return `${translateText(title)}\n${lines.join('\n')}`;
 }
 
-function showShareOptions(title, summary, phone = '') {
-  currentSharePayload = { title, summary, phone };
+function showShareOptions(title, summary, phone = '', options = {}) {
+  currentSharePayload = { title, summary, phone, ...options };
+  const printButton = options.loan
+    ? '<button type="button" class="btn btn-light" onclick="printLoanReceiptFromPayload()">Print SBG</button>'
+    : '<button type="button" class="btn btn-light" onclick="printSharedRecord()">Print</button>';
   openDataModal('Data Berhasil Disimpan', 'Pilih aksi lanjutan untuk arsip atau kirim ke klien.', `
     <div class="share-box">
       <label>Ringkasan Data</label>
       <textarea class="share-summary" readonly>${escapeHTML(summary)}</textarea>
       <div class="share-actions">
-        <button type="button" class="btn btn-light" onclick="printSharedRecord()">Print</button>
+        ${printButton}
         <button type="button" class="btn btn-light" onclick="emailSharedRecord()">Email</button>
         <button type="button" class="btn btn-primary" onclick="whatsappSharedRecord()">WhatsApp</button>
       </div>
@@ -1644,6 +1697,10 @@ function getSharePayload() {
 function printSharedRecord() {
   const payload = getSharePayload();
   if (!payload) return;
+  if (payload.loan) {
+    printLoanReceipt(payload.loan);
+    return;
+  }
 
   const printWindow = window.open('', '_blank');
   if (!printWindow) {
@@ -1672,6 +1729,524 @@ function printSharedRecord() {
   printWindow.document.close();
   printWindow.focus();
   printWindow.print();
+}
+
+function getBusinessSettings() {
+  const fallback = {
+    businessName: 'HIREI CHIBA PEÑOR, LDA',
+    businessAddress: 'Bairo Pite Hudi Laran / Dom Aleixo, Dili, Timor-Leste',
+    administrationFee: DEFAULT_ADMINISTRATION_FEE
+  };
+  const savedSettings = localStorage.getItem('businessSettings');
+  if (!savedSettings) return fallback;
+
+  try {
+    const settings = JSON.parse(savedSettings);
+    return {
+      businessName: settings.businessName || fallback.businessName,
+      businessAddress: settings.businessAddress || fallback.businessAddress,
+      administrationFee: Number(settings.administrationFee ?? fallback.administrationFee) || 0
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function getAdministrationFee() {
+  return getBusinessSettings().administrationFee;
+}
+
+function getBranchName(address) {
+  const normalizedAddress = String(address || '');
+  if (normalizedAddress.toLowerCase().includes('dili')) return 'DILI';
+  const parts = normalizedAddress.split(',').map(part => part.trim()).filter(Boolean);
+  return (parts.at(-1) || 'DILI').toUpperCase();
+}
+
+function getCityName(address) {
+  const normalizedAddress = String(address || '');
+  if (normalizedAddress.toLowerCase().includes('dili')) return 'Dili';
+  const parts = normalizedAddress.split(',').map(part => part.trim()).filter(Boolean);
+  return parts.at(-1) || 'Dili';
+}
+
+function getSbgNumber(loan) {
+  const date = loan.loanDate ? new Date(loan.loanDate) : new Date();
+  const year = Number.isNaN(date.getTime()) ? new Date().getFullYear() : date.getFullYear();
+  const month = String((Number.isNaN(date.getTime()) ? new Date() : date).getMonth() + 1).padStart(2, '0');
+  const code = String(loan.code || 'DRAFT').replace(/[^\w-]/g, '');
+  return `SBG/${year}/${month}/${code}`;
+}
+
+function numberToIndonesianWords(value) {
+  const number = Math.floor(Number(value || 0));
+  const words = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
+  if (number < 12) return words[number] || 'Nol';
+  if (number < 20) return `${numberToIndonesianWords(number - 10)} Belas`;
+  if (number < 100) {
+    const remainder = number % 10;
+    return `${numberToIndonesianWords(Math.floor(number / 10))} Puluh${remainder ? ` ${numberToIndonesianWords(remainder)}` : ''}`;
+  }
+  if (number < 200) return `Seratus${number > 100 ? ` ${numberToIndonesianWords(number - 100)}` : ''}`;
+  if (number < 1000) {
+    const remainder = number % 100;
+    return `${numberToIndonesianWords(Math.floor(number / 100))} Ratus${remainder ? ` ${numberToIndonesianWords(remainder)}` : ''}`;
+  }
+  if (number < 2000) return `Seribu${number > 1000 ? ` ${numberToIndonesianWords(number - 1000)}` : ''}`;
+  if (number < 1000000) {
+    const remainder = number % 1000;
+    return `${numberToIndonesianWords(Math.floor(number / 1000))} Ribu${remainder ? ` ${numberToIndonesianWords(remainder)}` : ''}`;
+  }
+  if (number < 1000000000) {
+    const remainder = number % 1000000;
+    return `${numberToIndonesianWords(Math.floor(number / 1000000))} Juta${remainder ? ` ${numberToIndonesianWords(remainder)}` : ''}`;
+  }
+  return String(number);
+}
+
+function padReceiptLabel(label) {
+  return String(label).padEnd(21, ' ');
+}
+
+function receiptLine() {
+  return '-'.repeat(59);
+}
+
+function centerReceiptLine(text) {
+  const cleanText = String(text || '').trim();
+  if (cleanText.length >= 59) return cleanText;
+  const leftPadding = Math.floor((59 - cleanText.length) / 2);
+  return `${' '.repeat(leftPadding)}${cleanText}`;
+}
+
+function formatReceiptMoney(value) {
+  return `USD ${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })},-`;
+}
+
+function getLoanDurationDays(loan) {
+  const start = new Date(loan.loanDate);
+  const end = new Date(loan.dueDate);
+  if (!loan.loanDate || !loan.dueDate || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return Number(loan.duration || 0) * 30 || '-';
+  }
+
+  return Math.max(Math.round((end - start) / 86400000), 0);
+}
+
+function buildLoanReceiptText(loan) {
+  const business = getBusinessSettings();
+  const branch = getBranchName(business.businessAddress);
+  const city = getCityName(business.businessAddress);
+  const durationMonths = Number(loan.duration || 0);
+  const durationDays = getLoanDurationDays(loan);
+  const amountWords = `${numberToIndonesianWords(loan.amount)} Dolar Amerika`;
+  const line = receiptLine();
+  const identityLabel = loan.identityType ? `No. ${loan.identityType}` : 'No. Identitas';
+
+  return `${line}
+${centerReceiptLine(`${business.businessName} - CABANG ${branch}`)}
+${line}
+${centerReceiptLine('SURAT BUKTI GADAI (SBG)')}
+${centerReceiptLine(`No: ${getSbgNumber(loan)}`)}
+
+Telah diterima barang jaminan berupa:
+${padReceiptLabel('Jenis Barang')}: ${loan.collateralType || '-'}
+${padReceiptLabel('Rincian')}: ${loan.collateralName || '-'}
+${padReceiptLabel('Nomor Seri/No. Rangka')}: ${loan.documentNumber || '-'}
+${padReceiptLabel('Taksiran')}: ${formatReceiptMoney(loan.appraisalValue)}
+
+Dari Nasabah:
+${padReceiptLabel('Nama')}: ${loan.client || '-'}
+${padReceiptLabel(identityLabel)}: ${loan.idNumber || '-'}
+${padReceiptLabel('Alamat')}: ${loan.address || '-'}
+
+Dengan jumlah uang pinjaman:
+${formatReceiptMoney(loan.amount)} (${amountWords})
+
+${padReceiptLabel('Jangka Waktu')}: ${durationDays === '-' ? '-' : `${durationDays} Hari`} (${durationMonths || '-'} bulan)
+${padReceiptLabel('Jatuh Tempo')}: ${formatDate(loan.dueDate)}
+
+Ketentuan:
+1. Barang jaminan disimpan dan dijaga oleh perusahaan.
+2. Nasabah dapat melunasi atau memperpanjang gadai.
+3. Jika tidak dilunasi hingga jatuh tempo, barang akan dilelang.
+
+${city}, ${formatDate(loan.loanDate || today)}
+
+    Penerima/Nasabah,                Petugas Kasir,
+
+
+    (${loan.client || '_____'})               (${loan.createdBy || '_____'})
+${line}`;
+}
+
+function printLoanReceipt(loan) {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    showToast('Browser memblokir popup print.');
+    return;
+  }
+
+  const business = getBusinessSettings();
+  const branch = getBranchName(business.businessAddress);
+  const city = getCityName(business.businessAddress);
+  const sbgNumber = getSbgNumber(loan);
+  const durationDays = getLoanDurationDays(loan);
+  const durationMonths = Number(loan.duration || 0);
+  const amountWords = `${numberToIndonesianWords(loan.amount)} Dolar Amerika`;
+  const logoUrl = new URL('assets/logo.png', window.location.href).href;
+  const identityLabel = loan.identityType ? `No. ${loan.identityType}` : 'No. Identitas';
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8" />
+      <title>${escapeHTML(sbgNumber)}</title>
+      <style>
+        @page { size: A4; margin: 14mm; }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          background: #e5e7eb;
+          color: #111111;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+        }
+        .preview-shell {
+          min-height: 100vh;
+          display: grid;
+          place-items: start center;
+          padding: 24px;
+        }
+        .toolbar {
+          width: min(100%, 210mm);
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-family: Arial, sans-serif;
+        }
+        .toolbar button {
+          border: 0;
+          border-radius: 8px;
+          padding: 10px 14px;
+          background: #2563eb;
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .sbg-paper {
+          width: 210mm;
+          min-height: 297mm;
+          background: #ffffff;
+          padding: 12mm 14mm;
+          box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+        }
+        .sbg-header {
+          display: grid;
+          grid-template-columns: 1fr 1.15fr;
+          gap: 24px;
+          align-items: start;
+          margin-bottom: 18px;
+        }
+        .brand-side img {
+          width: 130px;
+          height: 78px;
+          object-fit: contain;
+          object-position: left top;
+          display: block;
+          margin-bottom: 8px;
+        }
+        .doc-number {
+          font-size: 15px;
+          margin-bottom: 4px;
+        }
+        .business-name {
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 1.1;
+          margin-bottom: 22px;
+        }
+        .address-lines {
+          line-height: 1.35;
+        }
+        .meta-side {
+          text-align: right;
+          line-height: 1.35;
+        }
+        .meta-date {
+          font-size: 16px;
+          margin-bottom: 6px;
+        }
+        .branch-name {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 24px;
+        }
+        .doc-title {
+          font-size: 20px;
+          font-weight: 700;
+          text-align: center;
+          margin: 14px 0 4px;
+          letter-spacing: 0;
+        }
+        .doc-subtitle {
+          text-align: center;
+          font-weight: 700;
+          margin-bottom: 18px;
+        }
+        .section-text {
+          margin: 14px 0 8px;
+          line-height: 1.35;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 16px;
+        }
+        th {
+          text-align: left;
+          border-bottom: 1.5px dotted #111111;
+          padding: 4px 3px;
+          font-weight: 700;
+        }
+        td {
+          border-bottom: 1px dotted #111111;
+          padding: 5px 3px;
+          vertical-align: top;
+        }
+        .num, .money {
+          text-align: right;
+          white-space: nowrap;
+        }
+        .info-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+          margin-top: 18px;
+        }
+        .info-block h3 {
+          font-size: 16px;
+          margin: 0 0 8px;
+          text-decoration: underline;
+        }
+        .info-row {
+          display: grid;
+          grid-template-columns: 130px 1fr;
+          gap: 8px;
+          line-height: 1.45;
+        }
+        .totals {
+          width: 330px;
+          margin-left: auto;
+          margin-top: 14px;
+          line-height: 1.35;
+        }
+        .total-row {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 18px;
+        }
+        .terms {
+          margin-top: 18px;
+          line-height: 1.45;
+        }
+        .terms h3 {
+          font-size: 16px;
+          margin: 0 0 4px;
+        }
+        .terms ol {
+          margin: 0;
+          padding-left: 22px;
+        }
+        .signature-date {
+          text-align: right;
+          margin-top: 28px;
+        }
+        .signatures {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 70px;
+          margin-top: 24px;
+          text-align: center;
+        }
+        .signature-space {
+          height: 58px;
+        }
+        .signature-name {
+          display: inline-block;
+          min-width: 180px;
+          border-bottom: 1px dotted #111111;
+          padding-bottom: 2px;
+        }
+        .footer-line {
+          border-top: 1.5px solid #111111;
+          margin-top: 24px;
+        }
+        @media print {
+          body { background: #ffffff; }
+          .preview-shell { display: block; padding: 0; }
+          .toolbar { display: none; }
+          .sbg-paper {
+            width: auto;
+            min-height: auto;
+            padding: 0;
+            box-shadow: none;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <main class="preview-shell">
+        <div class="toolbar">
+          <button onclick="window.print()">Print</button>
+        </div>
+        <section class="sbg-paper">
+          <header class="sbg-header">
+            <div class="brand-side">
+              <img src="${escapeHTML(logoUrl)}" alt="Logo" />
+              <div class="doc-number">${escapeHTML(sbgNumber)}</div>
+              <div class="business-name">${escapeHTML(business.businessName)}</div>
+              <div class="address-lines">
+                ${escapeHTML(business.businessAddress)}<br />
+                Kontak: ${escapeHTML(loan.contact || '-')}
+              </div>
+            </div>
+            <div class="meta-side">
+              <div class="meta-date">Tanggal : ${escapeHTML(formatDate(loan.loanDate || today))}</div>
+              <div class="branch-name">CABANG ${escapeHTML(branch)}</div>
+              <div>${escapeHTML(business.businessAddress)}</div>
+              <div>No. SBG: ${escapeHTML(sbgNumber)}</div>
+              <div>Tgl. Jatuh Tempo : ${escapeHTML(formatDate(loan.dueDate))}</div>
+            </div>
+          </header>
+
+          <div class="doc-title">SURAT BUKTI GADAI (SBG)</div>
+          <div class="doc-subtitle">BUKTI PENERIMAAN BARANG JAMINAN</div>
+
+          <p class="section-text">Telah diterima barang jaminan berupa:</p>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:42px;">No.</th>
+                <th>Jenis Barang</th>
+                <th>Rincian</th>
+                <th>Nomor Seri/No. Rangka</th>
+                <th class="money">Taksiran</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td>${escapeHTML(loan.collateralType || '-')}</td>
+                <td>${escapeHTML(loan.collateralName || '-')}</td>
+                <td>${escapeHTML(loan.documentNumber || '-')}</td>
+                <td class="money">${escapeHTML(formatReceiptMoney(loan.appraisalValue))}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="info-grid">
+            <div class="info-block">
+              <h3>Dari Nasabah</h3>
+              <div class="info-row"><span>Nama</span><strong>${escapeHTML(loan.client || '-')}</strong></div>
+              <div class="info-row"><span>${escapeHTML(identityLabel)}</span><span>${escapeHTML(loan.idNumber || '-')}</span></div>
+              <div class="info-row"><span>Alamat</span><span>${escapeHTML(loan.address || '-')}</span></div>
+            </div>
+            <div class="info-block">
+              <h3>Data Pinjaman</h3>
+              <div class="info-row"><span>Jumlah</span><strong>${escapeHTML(formatReceiptMoney(loan.amount))}</strong></div>
+              <div class="info-row"><span>Terbilang</span><span>${escapeHTML(amountWords)}</span></div>
+              <div class="info-row"><span>Biaya Admin</span><span>${escapeHTML(formatReceiptMoney(loan.adminFee ?? getAdministrationFee()))}</span></div>
+              <div class="info-row"><span>Jangka Waktu</span><span>${escapeHTML(`${durationDays} Hari (${durationMonths || '-'} bulan)`)}</span></div>
+              <div class="info-row"><span>Jatuh Tempo</span><span>${escapeHTML(formatDate(loan.dueDate))}</span></div>
+            </div>
+          </div>
+
+          <div class="totals">
+            <div class="total-row"><span>Taksiran</span><span>${escapeHTML(formatReceiptMoney(loan.appraisalValue))}</span></div>
+            <div class="total-row"><span>Uang Pinjaman</span><strong>${escapeHTML(formatReceiptMoney(loan.amount))}</strong></div>
+            <div class="total-row"><span>Margin</span><span>${escapeHTML(`${loan.margin || 0}%`)}</span></div>
+            <div class="total-row"><span>Biaya Administrasi</span><span>${escapeHTML(formatReceiptMoney(loan.adminFee ?? getAdministrationFee()))}</span></div>
+            <div class="total-row"><span>Total Tagihan</span><strong>${escapeHTML(formatReceiptMoney(getTotalPayable(loan)))}</strong></div>
+          </div>
+
+          <section class="terms">
+            <h3>Ketentuan:</h3>
+            <ol>
+              <li>Barang jaminan disimpan dan dijaga oleh perusahaan.</li>
+              <li>Nasabah dapat melunasi atau memperpanjang gadai.</li>
+              <li>Jika tidak dilunasi hingga jatuh tempo, barang akan dilelang.</li>
+            </ol>
+          </section>
+
+          <div class="signature-date">${escapeHTML(city)}, ${escapeHTML(formatDate(loan.loanDate || today))}</div>
+          <div class="signatures">
+            <div>
+              <div>Penerima/Nasabah,</div>
+              <div class="signature-space"></div>
+              <div class="signature-name">${escapeHTML(loan.client || '')}</div>
+            </div>
+            <div>
+              <div>Petugas Kasir,</div>
+              <div class="signature-space"></div>
+              <div class="signature-name">${escapeHTML(loan.createdBy || getCurrentStaff())}</div>
+            </div>
+          </div>
+          <div class="footer-line"></div>
+        </section>
+      </main>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+}
+
+function getLoanDataFromForm() {
+  calculateLoan();
+  return {
+    code: document.getElementById('loanCode')?.value.trim(),
+    client: document.getElementById('clientName')?.value.trim(),
+    contact: document.getElementById('contact')?.value.trim(),
+    address: document.getElementById('address')?.value.trim(),
+    identityType: document.getElementById('identityType')?.value,
+    idNumber: document.getElementById('idNumber')?.value.trim(),
+    collateralType: document.getElementById('collateralType')?.value,
+    collateralName: document.getElementById('collateralName')?.value.trim(),
+    appraisalValue: Number(document.getElementById('appraisalValue')?.value) || 0,
+    documentNumber: document.getElementById('documentNumber')?.value.trim(),
+    loanDate: document.getElementById('loanDate')?.value,
+    amount: Number(document.getElementById('loanAmount')?.value) || 0,
+    margin: Number(document.getElementById('margin')?.value) || 0,
+    adminFee: getAdministrationFee(),
+    duration: Number(document.getElementById('duration')?.value) || 3,
+    dueDate: document.getElementById('dueDate')?.value,
+    createdBy: document.getElementById('createdBy')?.value.trim() || getCurrentStaff()
+  };
+}
+
+function printLoanReceiptFromForm() {
+  const form = document.getElementById('loanForm');
+  if (form && !form.reportValidity()) return;
+
+  const loan = getLoanDataFromForm();
+  if (!loan.client || !loan.collateralName || !loan.amount || !loan.dueDate) {
+    showToast('Lengkapi data klien, jaminan, dan jumlah pinjaman lebih dari $0.');
+    return;
+  }
+
+  printLoanReceipt(loan);
+}
+
+function printLoanReceiptFromPayload() {
+  const payload = getSharePayload();
+  if (!payload?.loan) return;
+  printLoanReceipt(payload.loan);
 }
 
 function emailSharedRecord() {
@@ -2499,6 +3074,8 @@ function resetLoanForm() {
     if (monthlyPayment) monthlyPayment.textContent = '$0.00';
     const totalPayable = document.getElementById('totalPayable');
     if (totalPayable) totalPayable.textContent = '$0.00';
+    const adminFee = document.getElementById('adminFee');
+    if (adminFee) adminFee.textContent = `$${getAdministrationFee().toFixed(2)}`;
 
     const loanPackage = document.getElementById('loanPackage');
     if (loanPackage) loanPackage.value = '';
@@ -2584,6 +3161,7 @@ function submitLoan(event) {
     duration,
     dueDate,
     monthlyPayment,
+    adminFee: getAdministrationFee(),
     disbursementMethod,
     disbursementStatus,
     penaltyRate,
@@ -2596,6 +3174,23 @@ function submitLoan(event) {
   else loans.unshift(loan);
 
   saveLoans(loans);
+
+  if (existingIndex < 0) {
+    const cashIn = getRecords(storageKeys.cashIn, defaultCashIn);
+    cashIn.unshift({
+      code: nextCode('KM', cashIn),
+      source: 'Biaya Administrasi',
+      category: 'Biaya Administrasi',
+      method: loan.disbursementMethod || 'Tunai',
+      description: `Biaya administrasi ${loan.code} ${loan.client}`,
+      cashDate: loan.loanDate,
+      amount: loan.adminFee,
+      createdBy: loan.createdBy,
+      attachment: ''
+    });
+    saveRecords(storageKeys.cashIn, cashIn);
+  }
+
   renderTemporaryDatabase();
 
   document.getElementById('loanForm')?.reset();
@@ -2614,6 +3209,7 @@ function submitLoan(event) {
     { label: 'Jumlah Pinjaman', value: money(loan.amount) },
     { label: 'Margin', value: `${loan.margin}%` },
     { label: 'Durasi', value: `${loan.duration} bulan` },
+    { label: 'Biaya Administrasi', value: money(loan.adminFee) },
     { label: 'Total Harus Dibayar', value: money(getTotalPayable(loan)) },
     { label: 'Cicilan Bulanan', value: money(loan.monthlyPayment) },
     { label: 'Tanggal Pinjam', value: formatDate(loan.loanDate) },
@@ -2633,7 +3229,7 @@ function submitLoan(event) {
     { label: 'Petugas', value: loan.createdBy },
     { label: 'Status', value: loan.status },
     { label: 'Catatan', value: loan.note }
-  ]), loan.contact);
+  ]), loan.contact, { loan });
 }
 
 function searchTable() {
@@ -2664,7 +3260,7 @@ function viewDetail(code) {
     { label: 'Jaminan', value: `${loan.collateralType} - ${loan.collateralName}` },
     { label: 'Nilai Taksiran', value: money(loan.appraisalValue) },
     { label: 'Status', value: loan.status }
-  ]), loan.contact);
+  ]), loan.contact, { loan });
 }
 
 function exportData() {
@@ -2769,11 +3365,13 @@ function saveSettings() {
     initialCapital: document.getElementById('initialCapital')?.value || '',
     defaultDuration: document.getElementById('defaultDuration')?.value || '',
     defaultMargin: document.getElementById('defaultMargin')?.value || '',
+    administrationFee: document.getElementById('administrationFee')?.value || String(DEFAULT_ADMINISTRATION_FEE),
     businessAddress: document.getElementById('businessAddress')?.value.trim() || ''
   };
 
   localStorage.setItem('businessSettings', JSON.stringify(settings));
   saveLoanPackages();
+  calculateLoan();
   showToast('Pengaturan disimpan.');
 }
 
@@ -2794,6 +3392,13 @@ function loadSettings() {
     });
   }
 
+  const administrationFeeField = document.getElementById('administrationFee');
+  if (administrationFeeField && !administrationFeeField.value) {
+    administrationFeeField.value = String(DEFAULT_ADMINISTRATION_FEE);
+  }
+  const adminFeeDisplay = document.getElementById('adminFee');
+  if (adminFeeDisplay) adminFeeDisplay.textContent = `$${getAdministrationFee().toFixed(2)}`;
+  calculateLoan();
   loadLoanPackages();
 }
 
@@ -2854,6 +3459,13 @@ function translateText(text) {
     return language === 'zh'
       ? `贷款放款 ${loanDisbursementMatch[1]}`
       : `Loan disbursement ${loanDisbursementMatch[1]}`;
+  }
+
+  const adminFeeMatch = cleanText.match(/^Biaya administrasi\s+(.+)$/i);
+  if (adminFeeMatch) {
+    return language === 'zh'
+      ? `管理费 ${adminFeeMatch[1]}`
+      : `Administration fee ${adminFeeMatch[1]}`;
   }
 
   const notFoundMatch = cleanText.match(/^Data\s+(.+)\s+tidak ditemukan\.$/i);

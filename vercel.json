@@ -1,0 +1,36 @@
+{
+  "redirects": [
+    { "source": "/index.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/login.html", "destination": "/login", "permanent": true },
+    { "source": "/klien.html", "destination": "/klien", "permanent": true },
+    { "source": "/pinjaman.html", "destination": "/pinjaman", "permanent": true },
+    { "source": "/pinjaman-baru.html", "destination": "/pinjaman-baru", "permanent": true },
+    { "source": "/jaminan.html", "destination": "/jaminan", "permanent": true },
+    { "source": "/pembayaran.html", "destination": "/pembayaran", "permanent": true },
+    { "source": "/jatuh-tempo.html", "destination": "/jatuh-tempo", "permanent": true },
+    { "source": "/lelang.html", "destination": "/lelang", "permanent": true },
+    { "source": "/kas-masuk.html", "destination": "/kas-masuk", "permanent": true },
+    { "source": "/kas-keluar.html", "destination": "/kas-keluar", "permanent": true },
+    { "source": "/laporan-keuangan.html", "destination": "/laporan-keuangan", "permanent": true },
+    { "source": "/kontrak.html", "destination": "/kontrak", "permanent": true },
+    { "source": "/user-role.html", "destination": "/user-role", "permanent": true },
+    { "source": "/pengaturan.html", "destination": "/pengaturan", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/klien", "destination": "/klien.html" },
+    { "source": "/pinjaman", "destination": "/pinjaman.html" },
+    { "source": "/pinjaman-baru", "destination": "/pinjaman-baru.html" },
+    { "source": "/jaminan", "destination": "/jaminan.html" },
+    { "source": "/pembayaran", "destination": "/pembayaran.html" },
+    { "source": "/jatuh-tempo", "destination": "/jatuh-tempo.html" },
+    { "source": "/lelang", "destination": "/lelang.html" },
+    { "source": "/kas-masuk", "destination": "/kas-masuk.html" },
+    { "source": "/kas-keluar", "destination": "/kas-keluar.html" },
+    { "source": "/laporan-keuangan", "destination": "/laporan-keuangan.html" },
+    { "source": "/kontrak", "destination": "/kontrak.html" },
+    { "source": "/user-role", "destination": "/user-role.html" },
+    { "source": "/pengaturan", "destination": "/pengaturan.html" }
+  ]
+}

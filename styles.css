@@ -134,96 +134,96 @@ body {
   flex: 0 0 30px;
 }
 
-.nav-item[href="index.html"]::before {
+.nav-item[href="/dashboard"]::before {
   background-color: #1d4ed8;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="klien.html"]::before {
+.nav-item[href="/klien"]::before {
   background-color: #0891b2;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="pinjaman.html"]::before {
+.nav-item[href="/pinjaman"]::before {
   background-color: #2563eb;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7H5a2 2 0 0 0 0 4h14a2 2 0 0 1 0 4H4'/%3E%3Cpath d='M6 3v18'/%3E%3Cpath d='M18 3v18'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="pinjaman-baru.html"]::before {
+.nav-item[href="/pinjaman-baru"]::before {
   background-color: #2563eb;
   --nav-icon: url("assets/icons/loans.svg");
 }
 
-.nav-item[href="jaminan.html"]::before {
+.nav-item[href="/jaminan"]::before {
   background-color: #0f766e;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10'/%3E%3Cpath d='m9 12 2 2 4-5'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="pembayaran.html"]::before {
+.nav-item[href="/pembayaran"]::before {
   background-color: #16a34a;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='5' width='20' height='14' rx='2'/%3E%3Cpath d='M2 10h20'/%3E%3Cpath d='M7 15h3'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="jatuh-tempo.html"]::before {
+.nav-item[href="/jatuh-tempo"]::before {
   background-color: #ca8a04;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="lelang.html"]::before {
+.nav-item[href="/lelang"]::before {
   background-color: #9333ea;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m14 13-7 7'/%3E%3Cpath d='m8 8 8 8'/%3E%3Cpath d='m9 7 6-6 4 4-6 6'/%3E%3Cpath d='m3 21 6-6'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="kas-masuk.html"]::before {
+.nav-item[href="/kas-masuk"]::before {
   background-color: #15803d;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12'/%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3Cpath d='M5 21h14'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="kas-keluar.html"]::before {
+.nav-item[href="/kas-keluar"]::before {
   background-color: #dc2626;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21V9'/%3E%3Cpath d='m7 14 5-5 5 5'/%3E%3Cpath d='M5 3h14'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="laporan-keuangan.html"]::before {
+.nav-item[href="/laporan-keuangan"]::before {
   background-color: #475569;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19V5'/%3E%3Cpath d='M4 19h16'/%3E%3Crect x='7' y='11' width='3' height='5'/%3E%3Crect x='12' y='7' width='3' height='9'/%3E%3Crect x='17' y='9' width='3' height='7'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="kontrak.html"]::before {
+.nav-item[href="/kontrak"]::before {
   background-color: #7c3aed;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3Cpath d='M8 13h8'/%3E%3Cpath d='M8 17h5'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="user-role.html"]::before {
+.nav-item[href="/user-role"]::before {
   background-color: #0ea5e9;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='m17 11 2 2 4-4'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="pengaturan.html"]::before {
+.nav-item[href="/pengaturan"]::before {
   background-color: #64748b;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8.9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="login.html"]::before {
+.nav-item[href="/login"]::before {
   background-color: #991b1b;
   --nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'/%3E%3Cpath d='m16 17 5-5-5-5'/%3E%3Cpath d='M21 12H9'/%3E%3C/svg%3E");
 }
 
-.nav-item[href="index.html"]::before { --nav-icon: url("assets/icons/dashboard.svg"); }
-.nav-item[href="klien.html"]::before { --nav-icon: url("assets/icons/clients.svg"); }
-.nav-item[href="pinjaman.html"]::before { --nav-icon: url("assets/icons/loans.svg"); }
-.nav-item[href="pinjaman-baru.html"]::before { --nav-icon: url("assets/icons/loans.svg"); }
-.nav-item[href="jaminan.html"]::before { --nav-icon: url("assets/icons/collateral.svg"); }
-.nav-item[href="pembayaran.html"]::before { --nav-icon: url("assets/icons/payments.svg"); }
-.nav-item[href="jatuh-tempo.html"]::before { --nav-icon: url("assets/icons/due-date.svg"); }
-.nav-item[href="lelang.html"]::before { --nav-icon: url("assets/icons/auction.svg"); }
-.nav-item[href="kas-masuk.html"]::before { --nav-icon: url("assets/icons/cash-in.svg"); }
-.nav-item[href="kas-keluar.html"]::before { --nav-icon: url("assets/icons/cash-out.svg"); }
-.nav-item[href="laporan-keuangan.html"]::before { --nav-icon: url("assets/icons/reports.svg"); }
-.nav-item[href="kontrak.html"]::before { --nav-icon: url("assets/icons/contracts.svg"); }
-.nav-item[href="user-role.html"]::before { --nav-icon: url("assets/icons/users.svg"); }
-.nav-item[href="pengaturan.html"]::before { --nav-icon: url("assets/icons/settings.svg"); }
-.nav-item[href="login.html"]::before { --nav-icon: url("assets/icons/logout.svg"); }
+.nav-item[href="/dashboard"]::before { --nav-icon: url("assets/icons/dashboard.svg"); }
+.nav-item[href="/klien"]::before { --nav-icon: url("assets/icons/clients.svg"); }
+.nav-item[href="/pinjaman"]::before { --nav-icon: url("assets/icons/loans.svg"); }
+.nav-item[href="/pinjaman-baru"]::before { --nav-icon: url("assets/icons/loans.svg"); }
+.nav-item[href="/jaminan"]::before { --nav-icon: url("assets/icons/collateral.svg"); }
+.nav-item[href="/pembayaran"]::before { --nav-icon: url("assets/icons/payments.svg"); }
+.nav-item[href="/jatuh-tempo"]::before { --nav-icon: url("assets/icons/due-date.svg"); }
+.nav-item[href="/lelang"]::before { --nav-icon: url("assets/icons/auction.svg"); }
+.nav-item[href="/kas-masuk"]::before { --nav-icon: url("assets/icons/cash-in.svg"); }
+.nav-item[href="/kas-keluar"]::before { --nav-icon: url("assets/icons/cash-out.svg"); }
+.nav-item[href="/laporan-keuangan"]::before { --nav-icon: url("assets/icons/reports.svg"); }
+.nav-item[href="/kontrak"]::before { --nav-icon: url("assets/icons/contracts.svg"); }
+.nav-item[href="/user-role"]::before { --nav-icon: url("assets/icons/users.svg"); }
+.nav-item[href="/pengaturan"]::before { --nav-icon: url("assets/icons/settings.svg"); }
+.nav-item[href="/login"]::before { --nav-icon: url("assets/icons/logout.svg"); }
 
 .nav-item:hover,
 .nav-item.active {
@@ -656,7 +656,7 @@ textarea:focus {
 
 .total-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
